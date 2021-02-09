@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "autoclicker-fabric",
+  "version": "${version}",
+  "name": "Auto Clicker",
+  "description": "Automatically left and right clicks for you, how kind!",
+  "authors": [
+    "ErrorMikey (Michael Hillcox)"
+  ],
+  "contact": {
+    "homepage": "https://mikey.pro/",
+    "sources": "https://github.com/michaelhillcox/auto-clicker-fabric"
+  },
+  "license": "CC0-1.0",
+  "icon": "assets/autoclicker-fabric/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "main": [
+      "pro.mikey.autoclicker.AutoClicker"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.16.x"
+  }
+}

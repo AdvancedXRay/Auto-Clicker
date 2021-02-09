@@ -1,0 +1,14 @@
+{
+  "category.autoclicker-fabric": "Auto clicker",
+  "keybinding.toggle-hold": "Toggle Holding keys",
+  "keybinding.open-gui": "Open auto clicker GUI",
+  "autoclicker-fabric.hud.holding": "Holding %s",
+  "autoclicker-fabric.msg.holding-keys": "Holding keys!",
+  "autoclicker-fabric.msg.released-keys": "Released keys!",
+  "autoclicker-fabric.gui.speed": "Speed: %f ticks",
+  "autoclicker-fabric.gui.active": "Active: %s",
+  "autoclicker-fabric.gui.spamming": "Spamming: %s",
+  "autoclicker-fabric.gui.attack": "Attack (left click)",
+  "autoclicker-fabric.gui.use": "Use (right click)",
+  "autoclicker-fabric.gui.respect": "Respect cooldown: %s"
+}
