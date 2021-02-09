@@ -17,7 +17,7 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 
 public class AutoClicker implements ModInitializer {
-  public static final String MOD_ID = "advanced-xray-fabric";
+  public static final String MOD_ID = "autoclicker-fabric";
   public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
   public static final KeyBinding rightClickToggle =
       new KeyBinding("keybinding.open-gui", GLFW.GLFW_KEY_O, "category.autoclicker-fabric");
