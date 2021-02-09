@@ -11,7 +11,7 @@
     "homepage": "https://mikey.pro/",
     "sources": "https://github.com/michaelhillcox/auto-clicker-fabric"
   },
-  "license": "CC0-1.0",
+  "license": "MIT",
   "icon": "assets/autoclicker-fabric/icon.png",
   "environment": "client",
   "entrypoints": {
