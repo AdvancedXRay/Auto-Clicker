@@ -1,4 +1,4 @@
-# Auto-Clicker-Fabric
+# Auto Clicker (Fabric)
 
 Quick and dirty Auto Clicker mod for Fabric(mc)
 
