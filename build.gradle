@@ -80,9 +80,6 @@ publishing {
             artifact(remapJar) {
                 builtBy remapJar
             }
-            artifact(sourcesJar) {
-                builtBy remapSourcesJar
-            }
 
             pom.withXml {
                 def node = asNode()
