@@ -2,6 +2,8 @@
 
 Quick and dirty Auto Clicker mod for Fabric(mc)
 
+[![Downloads](http://cf.way2muchnoise.eu/full_445095_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/auto-clicker-fabric)
+[![Versions Supported](http://cf.way2muchnoise.eu/versions/445095.svg)](https://www.curseforge.com/minecraft/mc-mods/auto-clicker-fabric)
 [![GitHub license](https://img.shields.io/github/license/MichaelHillcox/Auto-Clicker-Fabric)](https://github.com/MichaelHillcox/Auto-Clicker-Fabric/blob/main/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/MichaelHillcox/Auto-Clicker-Fabric)](https://github.com/MichaelHillcox/Auto-Clicker-Fabric/stargazers)
 [![GitHub issues](https://img.shields.io/github/issues/MichaelHillcox/Auto-Clicker-Fabric)](https://github.com/MichaelHillcox/Auto-Clicker-Fabric/issues)
