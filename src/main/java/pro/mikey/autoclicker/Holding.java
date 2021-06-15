@@ -1,6 +1,6 @@
 package pro.mikey.autoclicker;
 
-import net.minecraft.client.options.KeyBinding;
+import net.minecraft.client.option.KeyBinding;
 
 public class Holding {
   private final KeyBinding key;

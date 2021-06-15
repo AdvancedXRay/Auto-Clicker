@@ -14,7 +14,7 @@ public class OptionsScreen extends Screen {
     protected void init() {
         int x = this.width / 2, y = this.height / 2;
 
-        this.addButton(
+        this.addDrawableChild(
                 new ButtonWidget(
                         x - 135,
                         y - 44,
@@ -25,7 +25,7 @@ public class OptionsScreen extends Screen {
                             AutoClicker.leftHolding.setActive(!AutoClicker.leftHolding.isActive());
                             button.setMessage(Language.GUI_ACTIVE.getText(AutoClicker.leftHolding.isActive()));
                         }));
-        this.addButton(
+        this.addDrawableChild(
                 new ButtonWidget(
                         x + 5,
                         y - 44,
@@ -36,7 +36,7 @@ public class OptionsScreen extends Screen {
                             AutoClicker.rightHolding.setActive(!AutoClicker.rightHolding.isActive());
                             button.setMessage(Language.GUI_ACTIVE.getText(AutoClicker.rightHolding.isActive()));
                         }));
-        this.addButton(
+        this.addDrawableChild(
                 new ButtonWidget(
                         x - 135,
                         y - 22,
@@ -48,7 +48,7 @@ public class OptionsScreen extends Screen {
                             button.setMessage(
                                     Language.GUI_SPAMMING.getText(AutoClicker.leftHolding.isSpamming()));
                         }));
-        this.addButton(
+        this.addDrawableChild(
                 new ButtonWidget(
                         x + 5,
                         y - 22,
@@ -60,7 +60,7 @@ public class OptionsScreen extends Screen {
                             button.setMessage(
                                     Language.GUI_SPAMMING.getText(AutoClicker.rightHolding.isSpamming()));
                         }));
-        this.addButton(
+        this.addDrawableChild(
                 new OptionsSliderWidget(
                         x - 135,
                         y,
@@ -69,7 +69,7 @@ public class OptionsScreen extends Screen {
                         Language.GUI_SPEED.getText(),
                         AutoClicker.leftHolding.getSpeed() / 50f,
                         value -> AutoClicker.leftHolding.setSpeed(value)));
-        this.addButton(
+        this.addDrawableChild(
                 new OptionsSliderWidget(
                         x + 5,
                         y,
@@ -78,7 +78,7 @@ public class OptionsScreen extends Screen {
                         Language.GUI_SPEED.getText(),
                         AutoClicker.rightHolding.getSpeed() / 50f,
                         value -> AutoClicker.rightHolding.setSpeed(value)));
-        this.addButton(
+        this.addDrawableChild(
                 new ButtonWidget(
                         x - 135,
                         y + 22,

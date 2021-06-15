@@ -6,7 +6,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.options.KeyBinding;
+import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Formatting;
@@ -44,7 +44,6 @@ public class AutoClicker implements ModInitializer {
         leftHolding = new Holding(client.options.keyAttack, false, false, 0, false);
         rightHolding = new Holding(client.options.keyUse, false, false, 0, false);
     }
-
     private void RenderGameOverlayEvent(MatrixStack matrixStack, float delta) {
         if ((!leftHolding.isActive() && !rightHolding.isActive()) || !this.isActive) {
             return;
