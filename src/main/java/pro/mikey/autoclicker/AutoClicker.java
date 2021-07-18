@@ -79,7 +79,7 @@ public class AutoClicker implements ModInitializer {
     }
 
     private void clientTickEvent(MinecraftClient mc) {
-        if (mc.player == null || mc.world == null || mc.currentScreen != null) {
+        if (mc.player == null || mc.world == null) {
             return;
         }
 
@@ -108,7 +108,7 @@ public class AutoClicker implements ModInitializer {
                 if (key.getTimeout() <= 1) {
                     System.out.println("Act");
                     // Press the button twice by toggling 1 and 0
-                    key.getKey().setPressed(key.getTimeout() == 0);
+                    key.getKey().setPressed(key.getTimeout() == 1);
 
                     if (key.getKey().isPressed()) {
                         this.attemptMobAttack(mc, key);
