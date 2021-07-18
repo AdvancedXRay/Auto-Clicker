@@ -5,28 +5,25 @@ import net.minecraft.client.option.KeyBinding;
 
 public class Holding {
     private final KeyBinding key;
-    private boolean respectCooldown;
-    private boolean isActive;
-    private boolean isSpamming;
-    private int speed;
+    Config.SharedConfig config;
     private int timeout;
 
-    public Holding(
-            KeyBinding key, boolean isActive, boolean isSpamming, int speed, boolean respectCooldown) {
+    public Holding(KeyBinding key, Config.SharedConfig config) {
+        this.config = config;
         this.key = key;
-        this.isActive = isActive;
-        this.isSpamming = isSpamming;
-        this.speed = speed;
-        this.timeout = speed;
-        this.respectCooldown = respectCooldown;
+        this.timeout = config.getCpt();
     }
 
     public boolean isRespectCooldown() {
-        return this.respectCooldown;
+        return this.config instanceof Config.LeftMouseConfig && ((Config.LeftMouseConfig) this.config).isRespectCooldown();
     }
 
     public void setRespectCooldown(boolean respectCooldown) {
-        this.respectCooldown = respectCooldown;
+        if (!(this.config instanceof Config.LeftMouseConfig)) {
+            return;
+        }
+
+        ((Config.LeftMouseConfig) this.config).setRespectCooldown(respectCooldown);
     }
 
     public KeyBinding getKey() {
@@ -34,27 +31,27 @@ public class Holding {
     }
 
     public boolean isActive() {
-        return this.isActive;
+        return this.config.isActive();
     }
 
     public void setActive(boolean active) {
-        this.isActive = active;
+        this.config.setActive(active);
     }
 
     public boolean isSpamming() {
-        return this.isSpamming;
+        return this.config.isSpamming();
     }
 
     public void setSpamming(boolean spamming) {
-        this.isSpamming = spamming;
+        this.config.setSpamming(spamming);
     }
 
     public int getSpeed() {
-        return this.speed;
+        return this.config.getCpt();
     }
 
     public void setSpeed(int speed) {
-        this.speed = speed;
+        this.config.setCpt(speed);
     }
 
     public int getTimeout() {
@@ -62,7 +59,7 @@ public class Holding {
     }
 
     public void resetTimeout() {
-        this.timeout = this.speed;
+        this.timeout = this.config.getCpt();
     }
 
     public void decreaseTimeout() {
@@ -74,19 +71,17 @@ public class Holding {
     }
 
     public static class AttachHolding extends Holding {
-        private boolean mobMode;
 
-        public AttachHolding(KeyBinding key, boolean isActive, boolean isSpamming, int speed, boolean respectCooldown, boolean mobMode) {
-            super(key, isActive, isSpamming, speed, respectCooldown);
-            this.mobMode = mobMode;
+        public AttachHolding(KeyBinding key, Config.LeftMouseConfig config) {
+            super(key, config);
         }
 
         public boolean isMobMode() {
-            return this.mobMode;
+            return ((Config.LeftMouseConfig) this.config).isMobMode();
         }
 
         public void setMobMode(boolean mobMode) {
-            this.mobMode = mobMode;
+            ((Config.LeftMouseConfig) this.config).setMobMode(mobMode);
         }
     }
 }

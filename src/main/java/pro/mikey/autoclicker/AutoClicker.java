@@ -1,5 +1,7 @@
 package pro.mikey.autoclicker;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -17,7 +19,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class AutoClicker implements ModInitializer {
     public static final String MOD_ID = "autoclicker-fabric";
@@ -26,10 +33,24 @@ public class AutoClicker implements ModInitializer {
             new KeyBinding("keybinding.open-gui", GLFW.GLFW_KEY_O, "category.autoclicker-fabric");
     private static final KeyBinding toggleHolding =
             new KeyBinding("keybinding.toggle-hold", GLFW.GLFW_KEY_I, "category.autoclicker-fabric");
-    private static final Path CONFIG_FILE = MinecraftClient.getInstance().runDirectory.toPath().resolveSibling("/config/auto-clicker-fabric.json");
+    private static final Path CONFIG_DIR = Paths.get(MinecraftClient.getInstance().runDirectory.getPath() + "/config");
+    private static final Path CONFIG_FILE = Paths.get(CONFIG_DIR + "/auto-clicker-fabric.json");
     public static Holding.AttachHolding leftHolding;
     public static Holding rightHolding;
+    private static AutoClicker INSTANCE;
     private boolean isActive = false;
+    private Config config = new Config(
+            new Config.LeftMouseConfig(false, false, 0, false, false),
+            new Config.RightMouseConfig(false, false, 0)
+    );
+
+    public AutoClicker() {
+        INSTANCE = this;
+    }
+
+    public static AutoClicker getInstance() {
+        return INSTANCE;
+    }
 
     @Override
     public void onInitialize() {
@@ -45,10 +66,43 @@ public class AutoClicker implements ModInitializer {
     }
 
     private void clientReady(MinecraftClient client) {
-        leftHolding = new Holding.AttachHolding(client.options.keyAttack, false, false, 0, false, false);
-        rightHolding = new Holding(client.options.keyUse, false, false, 0, false);
+        if (!Files.exists(CONFIG_FILE)) {
+            try {
+                Files.createDirectories(CONFIG_DIR);
+                Files.createFile(CONFIG_FILE);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-        System.out.println(CONFIG_FILE);
+            this.saveConfig();
+        } else {
+            try {
+                FileReader json = new FileReader(CONFIG_FILE.toFile());
+                Config config = new Gson().fromJson(json, Config.class);
+                json.close();
+                if (config != null) {
+                    this.config = config;
+                }
+            } catch (JsonIOException | IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        leftHolding = new Holding.AttachHolding(client.options.keyAttack, this.config.getLeftClick());
+        rightHolding = new Holding(client.options.keyUse, this.config.getRightClick());
+    }
+
+    public void saveConfig() {
+        try {
+            FileWriter writer = new FileWriter(CONFIG_FILE.toFile());
+            new Gson().toJson(this.config, writer);
+            writer.flush();
+            writer.close();
+            System.out.println("Saving to config");
+            System.out.println(this.config);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void RenderGameOverlayEvent(MatrixStack matrixStack, float delta) {
