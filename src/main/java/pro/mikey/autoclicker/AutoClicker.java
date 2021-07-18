@@ -6,15 +6,18 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.options.KeyBinding;
+import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
+
+import java.nio.file.Path;
 
 public class AutoClicker implements ModInitializer {
     public static final String MOD_ID = "autoclicker-fabric";
@@ -23,7 +26,8 @@ public class AutoClicker implements ModInitializer {
             new KeyBinding("keybinding.open-gui", GLFW.GLFW_KEY_O, "category.autoclicker-fabric");
     private static final KeyBinding toggleHolding =
             new KeyBinding("keybinding.toggle-hold", GLFW.GLFW_KEY_I, "category.autoclicker-fabric");
-    public static Holding leftHolding;
+    private static final Path CONFIG_FILE = MinecraftClient.getInstance().runDirectory.toPath().resolveSibling("/config/auto-clicker-fabric.json");
+    public static Holding.AttachHolding leftHolding;
     public static Holding rightHolding;
     private boolean isActive = false;
 
@@ -41,8 +45,10 @@ public class AutoClicker implements ModInitializer {
     }
 
     private void clientReady(MinecraftClient client) {
-        leftHolding = new Holding(client.options.keyAttack, false, false, 0, false);
+        leftHolding = new Holding.AttachHolding(client.options.keyAttack, false, false, 0, false, false);
         rightHolding = new Holding(client.options.keyUse, false, false, 0, false);
+
+        System.out.println(CONFIG_FILE);
     }
 
     private void RenderGameOverlayEvent(MatrixStack matrixStack, float delta) {
@@ -52,29 +58,12 @@ public class AutoClicker implements ModInitializer {
 
         int y = 10;
         if (leftHolding.isActive()) {
-            MinecraftClient.getInstance()
-                    .textRenderer
-                    .drawWithShadow(
-                            matrixStack,
-                            Language.HUD_HOLDING.getText(
-                                    I18n.translate(leftHolding.getKey().getTranslationKey())),
-                            10,
-                            y,
-                            0xffffff);
-
+            MinecraftClient.getInstance().textRenderer.drawWithShadow(matrixStack, Language.HUD_HOLDING.getText(I18n.translate(leftHolding.getKey().getTranslationKey())), 10, y, 0xffffff);
             y += 15;
         }
 
         if (rightHolding.isActive()) {
-            MinecraftClient.getInstance()
-                    .textRenderer
-                    .drawWithShadow(
-                            matrixStack,
-                            Language.HUD_HOLDING.getText(
-                                    I18n.translate(rightHolding.getKey().getTranslationKey())),
-                            10,
-                            y,
-                            0xffffff);
+            MinecraftClient.getInstance().textRenderer.drawWithShadow(matrixStack, Language.HUD_HOLDING.getText(I18n.translate(rightHolding.getKey().getTranslationKey())), 10, y, 0xffffff);
         }
     }
 
@@ -106,7 +95,6 @@ public class AutoClicker implements ModInitializer {
             // How to handle the click if it's done by spamming
             if (key.getSpeed() > 0) {
                 if (key.getTimeout() <= 1) {
-                    System.out.println("Act");
                     // Press the button twice by toggling 1 and 0
                     key.getKey().setPressed(key.getTimeout() == 1);
 
@@ -133,6 +121,14 @@ public class AutoClicker implements ModInitializer {
         // Normal holding or cool down behaviour
         // respect cool down
         if (key.isRespectCooldown()) {
+            // Don't do anything if they're not looking at somethign
+            if (key instanceof Holding.AttachHolding && ((Holding.AttachHolding) key).isMobMode() && !this.isPlayerLookingAtMob(mc)) {
+                if (key.getKey().isPressed()) {
+                    key.getKey().setPressed(false);
+                }
+                return;
+            }
+
             if (mc.player.getAttackCooldownProgress(0) == 1.0F) {
                 key.getKey().setPressed(true);
                 this.attemptMobAttack(mc, key);
@@ -155,6 +151,11 @@ public class AutoClicker implements ModInitializer {
         if (rayTrace instanceof EntityHitResult && mc.interactionManager != null) {
             mc.interactionManager.attackEntity(mc.player, ((EntityHitResult) rayTrace).getEntity());
         }
+    }
+
+    private boolean isPlayerLookingAtMob(MinecraftClient mc) {
+        HitResult rayTrace = mc.crosshairTarget;
+        return rayTrace instanceof EntityHitResult && ((EntityHitResult) rayTrace).getEntity() instanceof LivingEntity;
     }
 
     private void keyInputEvent(MinecraftClient mc) {
