@@ -38,7 +38,7 @@ jobs:
         env:
           GIT_COMMIT: ${{ github.event.after }}
           GIT_PREVIOUS_COMMIT: ${{ github.event.before }}
-          CURSEFORGE_KEY: ${{ secrets.CURSEFORGE_KEY }}
+          CURSE_DEPLOY_TOKEN: ${{ secrets.CURSE_DEPLOY_TOKEN }}
         run: |
           chmod +x ./gradlew
           ./gradlew build curseforge --stacktrace --no-daemon
