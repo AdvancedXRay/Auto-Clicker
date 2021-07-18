@@ -104,7 +104,6 @@ public class AutoClicker implements ModInitializer {
             e.printStackTrace();
         }
     }
-
     private void RenderGameOverlayEvent(MatrixStack matrixStack, float delta) {
         if ((!leftHolding.isActive() && !rightHolding.isActive()) || !this.isActive) {
             return;
