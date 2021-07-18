@@ -98,8 +98,6 @@ public class AutoClicker implements ModInitializer {
             new Gson().toJson(this.config, writer);
             writer.flush();
             writer.close();
-            System.out.println("Saving to config");
-            System.out.println(this.config);
         } catch (IOException e) {
             e.printStackTrace();
         }
