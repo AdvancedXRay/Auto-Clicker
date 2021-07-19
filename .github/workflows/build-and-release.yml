@@ -3,6 +3,8 @@ name: CI Build & Release
 on:
   push:
     branches: [ main ]
+    tags:
+      - v*
 
 jobs:
   build:
@@ -32,7 +34,7 @@ jobs:
           ./gradlew build publish --stacktrace --no-daemon
       - name: Release to CurseForge
         if: |
-          github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, '[norelease]')
+          !contains(github.event.head_commit.message, '[norelease]')
         env:
           GIT_COMMIT: ${{ github.event.after }}
           GIT_PREVIOUS_COMMIT: ${{ github.event.before }}
