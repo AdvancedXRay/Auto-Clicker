@@ -228,7 +228,7 @@ public class AutoClicker implements ModInitializer {
         }
 
         while (rightClickToggle.wasPressed()) {
-            mc.openScreen(new OptionsScreen());
+            mc.setScreen(new OptionsScreen());
         }
     }
 }
