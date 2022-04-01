@@ -110,15 +110,10 @@ public class OptionsScreen extends Screen {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == AutoClicker.rightClickToggle.getDefaultKey().getCode()) {
-            this.onClose();
+            this.close();
             return true;
         }
 
         return super.keyPressed(keyCode, scanCode, modifiers);
-    }
-
-    @Override
-    public boolean isPauseScreen() {
-        return false;
     }
 }

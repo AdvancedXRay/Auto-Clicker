@@ -88,8 +88,8 @@ public class AutoClicker implements ModInitializer {
             }
         }
 
-        leftHolding = new Holding.AttachHolding(client.options.keyAttack, this.config.getLeftClick());
-        rightHolding = new Holding(client.options.keyUse, this.config.getRightClick());
+        leftHolding = new Holding.AttachHolding(client.options.attackKey, this.config.getLeftClick());
+        rightHolding = new Holding(client.options.useKey, this.config.getRightClick());
     }
 
     public void saveConfig() {
