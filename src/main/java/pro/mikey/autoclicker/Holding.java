@@ -69,9 +69,9 @@ public class Holding {
         this.timeout -= 1;
     }
 
-    public static class AttachHolding extends Holding {
+    public static class AttackHolding extends Holding {
 
-        public AttachHolding(KeyBinding key, Config.LeftMouseConfig config) {
+        public AttackHolding(KeyBinding key, Config.LeftMouseConfig config) {
             super(key, config);
         }
 

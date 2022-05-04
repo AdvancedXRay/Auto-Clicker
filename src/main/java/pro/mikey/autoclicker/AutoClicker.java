@@ -35,7 +35,7 @@ public class AutoClicker implements ModInitializer {
             new KeyBinding("keybinding.toggle-hold", GLFW.GLFW_KEY_I, "category.autoclicker-fabric");
     private static final Path CONFIG_DIR = Paths.get(MinecraftClient.getInstance().runDirectory.getPath() + "/config");
     private static final Path CONFIG_FILE = Paths.get(CONFIG_DIR + "/auto-clicker-fabric.json");
-    public static Holding.AttachHolding leftHolding;
+    public static Holding.AttackHolding leftHolding;
     public static Holding rightHolding;
     private static AutoClicker INSTANCE;
     private boolean isActive = false;
@@ -88,7 +88,7 @@ public class AutoClicker implements ModInitializer {
             }
         }
 
-        leftHolding = new Holding.AttachHolding(client.options.attackKey, this.config.getLeftClick());
+        leftHolding = new Holding.AttackHolding(client.options.attackKey, this.config.getLeftClick());
         rightHolding = new Holding(client.options.useKey, this.config.getRightClick());
     }
 
@@ -174,7 +174,7 @@ public class AutoClicker implements ModInitializer {
         // respect cool down
         if (key.isRespectCooldown()) {
             // Don't do anything if they're not looking at somethign
-            if (key instanceof Holding.AttachHolding && ((Holding.AttachHolding) key).isMobMode() && !this.isPlayerLookingAtMob(mc)) {
+            if (key instanceof Holding.AttackHolding && ((Holding.AttackHolding) key).isMobMode() && !this.isPlayerLookingAtMob(mc)) {
                 if (key.getKey().isPressed()) {
                     key.getKey().setPressed(false);
                 }
