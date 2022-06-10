@@ -12,6 +12,7 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.text.MutableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -35,7 +36,7 @@ public class AutoClicker implements ModInitializer {
             new KeyBinding("keybinding.toggle-hold", GLFW.GLFW_KEY_I, "category.autoclicker-fabric");
     private static final Path CONFIG_DIR = Paths.get(MinecraftClient.getInstance().runDirectory.getPath() + "/config");
     private static final Path CONFIG_FILE = Paths.get(CONFIG_DIR + "/auto-clicker-fabric.json");
-    public static Holding.AttachHolding leftHolding;
+    public static Holding.AttackHolding leftHolding;
     public static Holding rightHolding;
     private static AutoClicker INSTANCE;
     private boolean isActive = false;
@@ -43,7 +44,7 @@ public class AutoClicker implements ModInitializer {
             new Config.LeftMouseConfig(false, false, 0, false, false),
             new Config.RightMouseConfig(false, false, 0)
     );
-
+    
     public AutoClicker() {
         INSTANCE = this;
     }
@@ -88,7 +89,7 @@ public class AutoClicker implements ModInitializer {
             }
         }
 
-        leftHolding = new Holding.AttachHolding(client.options.attackKey, this.config.getLeftClick());
+        leftHolding = new Holding.AttackHolding(client.options.attackKey, this.config.getLeftClick());
         rightHolding = new Holding(client.options.useKey, this.config.getRightClick());
     }
 
@@ -174,7 +175,7 @@ public class AutoClicker implements ModInitializer {
         // respect cool down
         if (key.isRespectCooldown()) {
             // Don't do anything if they're not looking at somethign
-            if (key instanceof Holding.AttachHolding && ((Holding.AttachHolding) key).isMobMode() && !this.isPlayerLookingAtMob(mc)) {
+            if (key instanceof Holding.AttackHolding && ((Holding.AttackHolding) key).isMobMode() && !this.isPlayerLookingAtMob(mc)) {
                 if (key.getKey().isPressed()) {
                     key.getKey().setPressed(false);
                 }
@@ -217,9 +218,10 @@ public class AutoClicker implements ModInitializer {
             this.isActive = !this.isActive;
             mc.player.sendMessage(
                     (this.isActive ? Language.MSG_HOLDING_KEYS : Language.MSG_RELEASED_KEYS)
-                            .getText()
-                            .formatted(this.isActive ? Formatting.GREEN : Formatting.RED),
-                    true);
+                    .getText()
+                    .formatted(this.isActive ? Formatting.GREEN : Formatting.RED),
+                    true
+                    );
 
             if (!this.isActive) {
                 leftHolding.getKey().setPressed(false);
