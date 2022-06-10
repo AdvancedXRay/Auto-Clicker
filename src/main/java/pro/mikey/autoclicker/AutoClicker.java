@@ -12,6 +12,7 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.text.MutableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -43,7 +44,7 @@ public class AutoClicker implements ModInitializer {
             new Config.LeftMouseConfig(false, false, 0, false, false),
             new Config.RightMouseConfig(false, false, 0)
     );
-
+    
     public AutoClicker() {
         INSTANCE = this;
     }
@@ -216,9 +217,10 @@ public class AutoClicker implements ModInitializer {
         while (toggleHolding.wasPressed()) {
             this.isActive = !this.isActive;
             mc.player.sendMessage(
-                    (this.isActive ? Language.MSG_HOLDING_KEYS : Language.MSG_RELEASED_KEYS).getText(), true
-                    //.formatted(this.isActive ? Formatting.GREEN : Formatting.RED),
-                    //true
+                    (this.isActive ? Language.MSG_HOLDING_KEYS : Language.MSG_RELEASED_KEYS)
+                    .getText()
+                    .formatted(this.isActive ? Formatting.GREEN : Formatting.RED),
+                    true
                     );
 
             if (!this.isActive) {

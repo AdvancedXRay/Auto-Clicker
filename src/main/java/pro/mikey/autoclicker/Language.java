@@ -1,5 +1,6 @@
 package pro.mikey.autoclicker;
 
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
 public enum Language {
@@ -15,14 +16,14 @@ public enum Language {
     GUI_MOB_MODE("autoclicker-fabric.gui.mob-mode");
 
     private final String key;
-    Text text;
+    MutableText text;
 
     Language(String langKey) {
         this.text = Text.translatable(langKey);
         this.key = langKey;
     }
 
-    public Text getText() {
+    public MutableText getText() {
         return this.text;
     }
 
