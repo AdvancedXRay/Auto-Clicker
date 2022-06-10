@@ -1,6 +1,6 @@
 package pro.mikey.autoclicker;
 
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 public enum Language {
     HUD_HOLDING("autoclicker-fabric.hud.holding"),
@@ -15,18 +15,18 @@ public enum Language {
     GUI_MOB_MODE("autoclicker-fabric.gui.mob-mode");
 
     private final String key;
-    TranslatableText text;
+    Text text;
 
     Language(String langKey) {
-        this.text = new TranslatableText(langKey);
+        this.text = Text.translatable(langKey);
         this.key = langKey;
     }
 
-    public TranslatableText getText() {
+    public Text getText() {
         return this.text;
     }
 
-    public TranslatableText getText(Object... args) {
-        return new TranslatableText(this.key, args);
+    public Text getText(Object... args) {
+        return Text.translatable(this.key, args);
     }
 }

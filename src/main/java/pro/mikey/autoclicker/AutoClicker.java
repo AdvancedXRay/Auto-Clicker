@@ -216,10 +216,10 @@ public class AutoClicker implements ModInitializer {
         while (toggleHolding.wasPressed()) {
             this.isActive = !this.isActive;
             mc.player.sendMessage(
-                    (this.isActive ? Language.MSG_HOLDING_KEYS : Language.MSG_RELEASED_KEYS)
-                            .getText()
-                            .formatted(this.isActive ? Formatting.GREEN : Formatting.RED),
-                    true);
+                    (this.isActive ? Language.MSG_HOLDING_KEYS : Language.MSG_RELEASED_KEYS).getText(), true
+                    //.formatted(this.isActive ? Formatting.GREEN : Formatting.RED),
+                    //true
+                    );
 
             if (!this.isActive) {
                 leftHolding.getKey().setPressed(false);

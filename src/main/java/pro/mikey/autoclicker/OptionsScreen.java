@@ -4,18 +4,17 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.text.StringVisitable;
-import net.minecraft.text.TranslatableText;
 
 public class OptionsScreen extends Screen {
-    private final TranslatableText spammingHelpingText;
+    private final Text spammingHelpingText;
     private OptionsSliderWidget leftSpeedSlider;
     private OptionsSliderWidget rightSpeedSlider;
 
     protected OptionsScreen() {
-        super(LiteralText.EMPTY);
-        this.spammingHelpingText = new TranslatableText("autoclicker-fabric.gui.help.spam-speed");
+        super(Text.empty());
+        this.spammingHelpingText = Text.translatable("autoclicker-fabric.gui.help.spam-speed");
     }
 
     @Override
@@ -78,7 +77,7 @@ public class OptionsScreen extends Screen {
         this.renderHelpingTip(matrixStack, ((TooltipButton) button).tooltipCache);
     }
 
-    private void renderHelpingTip(MatrixStack stack, TranslatableText text) {
+    private void renderHelpingTip(MatrixStack stack, Text text) {
         int x = this.width / 2, y = this.height / 2;
 
         this.renderOrderedTooltip(stack,
