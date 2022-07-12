@@ -7,15 +7,23 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.MutableText;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
@@ -26,6 +34,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.HashSet;
 
 public class AutoClicker implements ModInitializer {
     public static final String MOD_ID = "autoclicker-fabric";
@@ -40,10 +50,18 @@ public class AutoClicker implements ModInitializer {
     public static Holding rightHolding;
     private static AutoClicker INSTANCE;
     private boolean isActive = false;
+    private boolean autoClicked = false;
+    private HashSet<String> parsedCropsSet = new HashSet<String>();
+    private HashSet<String> parsedBlacklist = new HashSet<String>();
     private Config config = new Config(
-            new Config.LeftMouseConfig(false, false, 0, false, false),
-            new Config.RightMouseConfig(false, false, 0)
+            new Config.LeftMouseConfig(false, false, 0, false, false, false),
+            new Config.RightMouseConfig(false, false, 0),
+            DEFAULT_CROPS_LIST,
+            DEFAULT_BLACKLIST
     );
+
+    public static final String DEFAULT_CROPS_LIST = "bamboo, beetroot, brown_mushroom, cactus, carrots, carved_pumpkin, cocoa, gravel, melon, nether_wart, potatoes, red_mushroom, sand, sugar_cane, sweet_berry_bush, wheat";
+    public static final String DEFAULT_BLACKLIST  = "armor_stand, player, villager";
     
     public AutoClicker() {
         INSTANCE = this;
@@ -91,6 +109,39 @@ public class AutoClicker implements ModInitializer {
 
         leftHolding = new Holding.AttackHolding(client.options.attackKey, this.config.getLeftClick());
         rightHolding = new Holding(client.options.useKey, this.config.getRightClick());
+        parsedCropsSet = parseList(getCropsList());
+        parsedBlacklist = parseList(getBlacklist());
+    }
+
+    public static String getCropsList() {
+        String cropsList = getInstance().config.getCropsList();
+        if ( cropsList == null || cropsList.trim() == "" )
+            return DEFAULT_CROPS_LIST;
+        else
+            return cropsList.trim();
+    }
+
+    public static void setCropsList(String value) {
+        getInstance().config.setCropsList(value);
+        getInstance().parsedCropsSet = parseList(getCropsList());
+    }
+
+    public static String getBlacklist() {
+        String blacklist = getInstance().config.getBlacklist();
+        if ( blacklist == null || blacklist.trim() == "" )
+            return DEFAULT_BLACKLIST;
+        else
+            return blacklist.trim();
+    }
+
+    public static void setBlacklist(String value) {
+        getInstance().config.setBlacklist(value);
+        getInstance().parsedBlacklist = parseList(getBlacklist());
+    }
+
+    private static HashSet<String> parseList(String list) {
+        String[] strParts = list.split("[\\s,]+");
+        return new HashSet<String>( Arrays.asList(strParts) );
     }
 
     public void saveConfig() {
@@ -174,18 +225,37 @@ public class AutoClicker implements ModInitializer {
         // Normal holding or cool down behaviour
         // respect cool down
         if (key.isRespectCooldown()) {
-            // Don't do anything if they're not looking at somethign
-            if (key instanceof Holding.AttackHolding && ((Holding.AttackHolding) key).isMobMode() && !this.isPlayerLookingAtMob(mc)) {
-                if (key.getKey().isPressed()) {
+            boolean shouldRelease = true;
+
+            if (((Holding.AttackHolding) key).isMobMode()) {
+                String mob_key = this.getMobPlayerLookingAt(mc);
+                if ( mob_key != null && !isBlacklisted(mob_key) )
+                    shouldRelease = false;
+            }
+
+            if (((Holding.AttackHolding) key).isCropMode()) {
+                String crop_key = this.getCropPlayerLookingAt(mc);
+                if ( crop_key != null ) {
+                    shouldRelease = isBlacklisted(crop_key) || !parsedCropsSet.contains(crop_key);
+                }
+            }
+
+            // Don't do anything if they're not looking at something
+            if (key instanceof Holding.AttackHolding && shouldRelease) {
+                // Release the key only if it was pressed by us
+                if (autoClicked && key.getKey().isPressed()) {
+                    autoClicked = false;
                     key.getKey().setPressed(false);
                 }
                 return;
             }
 
             if (mc.player.getAttackCooldownProgress(0) == 1.0F) {
+                autoClicked = true;
                 key.getKey().setPressed(true);
                 this.attemptMobAttack(mc, key);
             } else {
+                autoClicked = false;
                 key.getKey().setPressed(false);
             }
         } else {
@@ -206,9 +276,40 @@ public class AutoClicker implements ModInitializer {
         }
     }
 
-    private boolean isPlayerLookingAtMob(MinecraftClient mc) {
+    private String getMobPlayerLookingAt(MinecraftClient mc) {
         HitResult rayTrace = mc.crosshairTarget;
-        return rayTrace instanceof EntityHitResult && ((EntityHitResult) rayTrace).getEntity() instanceof LivingEntity;
+        if ( rayTrace instanceof EntityHitResult ) {
+            Entity entity = ((EntityHitResult) rayTrace).getEntity();
+            if ( entity instanceof LivingEntity ) {
+                Identifier id = EntityType.getId(entity.getType());
+                if ( id != null ) {
+                    return ( id.getNamespace() == "minecraft" ) ?
+                        id.getPath() : // no 'minecraft:' prefix on standard blocks
+                        id.toString(); // full id on nonstandard
+                }
+            }
+        }
+        return null;
+    }
+
+    private boolean isBlacklisted(String key) {
+        return parsedBlacklist.contains(key);
+    }
+
+    private String getCropPlayerLookingAt(MinecraftClient mc) {
+        HitResult rayTrace = mc.crosshairTarget;
+        if(rayTrace instanceof BlockHitResult){
+            BlockPos pos = ((BlockHitResult) rayTrace).getBlockPos();
+            BlockState state = mc.world.getBlockState(pos);
+            Block block = state.getBlock();
+            Identifier id = Registry.BLOCK.getId(block);
+            if(id != null) {
+                return ( id.getNamespace() == "minecraft" ) ?
+                    id.getPath() : // no 'minecraft:' prefix on standard blocks
+                    id.toString(); // full id on nonstandard
+            }
+        }
+        return null;
     }
 
     private void keyInputEvent(MinecraftClient mc) {

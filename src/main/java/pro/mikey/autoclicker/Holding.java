@@ -79,8 +79,16 @@ public class Holding {
             return ((Config.LeftMouseConfig) this.config).isMobMode();
         }
 
+        public boolean isCropMode() {
+            return ((Config.LeftMouseConfig) this.config).isCropMode();
+        }
+
         public void setMobMode(boolean mobMode) {
             ((Config.LeftMouseConfig) this.config).setMobMode(mobMode);
+        }
+
+        public void setCropMode(boolean mobMode) {
+            ((Config.LeftMouseConfig) this.config).setCropMode(mobMode);
         }
     }
 }

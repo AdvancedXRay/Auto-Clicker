@@ -1,13 +1,16 @@
 package pro.mikey.autoclicker;
 
 public class Config {
-
     private final LeftMouseConfig leftClick;
     private final RightMouseConfig rightClick;
+    private String cropsList;
+    private String blacklist;
 
-    public Config(LeftMouseConfig leftClick, RightMouseConfig rightClick) {
+    public Config(LeftMouseConfig leftClick, RightMouseConfig rightClick, String cropsList, String blacklist) {
         this.leftClick = leftClick;
         this.rightClick = rightClick;
+        this.cropsList = cropsList;
+        this.blacklist = blacklist;
     }
 
     public LeftMouseConfig getLeftClick() {
@@ -18,23 +21,43 @@ public class Config {
         return this.rightClick;
     }
 
+    public String getCropsList() {
+        return this.cropsList;
+    }
+
+    public void setCropsList(String value) {
+        cropsList = value;
+    }
+
+    public String getBlacklist() {
+        return this.blacklist;
+    }
+
+    public void setBlacklist(String value) {
+        blacklist = value;
+    }
+
     @Override
     public String toString() {
         return "Config{" +
                 "leftClick=" + this.leftClick +
                 ", rightClick=" + this.rightClick +
+                ", blacklist=\"" + this.blacklist + "\"" +
+                ", cropsList=\"" + this.cropsList + "\"" +
                 '}';
     }
 
     public static class LeftMouseConfig extends SharedConfig {
         private boolean respectCooldown;
         private boolean mobMode;
+        private boolean cropMode;
 
-        public LeftMouseConfig(boolean active, boolean spamming, int cpt, boolean respectCooldown, boolean mobMode) {
+        public LeftMouseConfig(boolean active, boolean spamming, int cpt, boolean respectCooldown, boolean mobMode, boolean cropMode) {
             super(active, spamming, cpt);
 
             this.respectCooldown = respectCooldown;
             this.mobMode = mobMode;
+            this.cropMode = cropMode;
         }
 
         public boolean isRespectCooldown() {
@@ -49,8 +72,16 @@ public class Config {
             return this.mobMode;
         }
 
+        public boolean isCropMode() {
+            return this.cropMode;
+        }
+
         public void setMobMode(boolean mobMode) {
             this.mobMode = mobMode;
+        }
+
+        public void setCropMode(boolean cropMode) {
+            this.cropMode = cropMode;
         }
     }
 

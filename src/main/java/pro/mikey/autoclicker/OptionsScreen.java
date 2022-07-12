@@ -6,15 +6,24 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.StringVisitable;
+import org.lwjgl.glfw.GLFW;
+
+import net.minecraft.client.gui.widget.TextFieldWidget;
 
 public class OptionsScreen extends Screen {
+    private final Text blacklistHelpingText;
+    private final Text cropsListHelpingText;
     private final Text spammingHelpingText;
     private OptionsSliderWidget leftSpeedSlider;
     private OptionsSliderWidget rightSpeedSlider;
+    private TextFieldWidget cropsList;
+    private TextFieldWidget blacklist;
 
     protected OptionsScreen() {
         super(Text.empty());
-        this.spammingHelpingText = Text.translatable("autoclicker-fabric.gui.help.spam-speed");
+        this.blacklistHelpingText = Text.translatable("autoclicker-fabric.gui.help.blacklist");
+        this.cropsListHelpingText = Text.translatable("autoclicker-fabric.gui.help.crops-list");
+        this.spammingHelpingText  = Text.translatable("autoclicker-fabric.gui.help.spam-speed");
     }
 
     @Override
@@ -71,6 +80,22 @@ public class OptionsScreen extends Screen {
                     button.setMessage(Language.GUI_MOB_MODE.getText(AutoClicker.leftHolding.isMobMode()));
                     AutoClicker.getInstance().saveConfig();
                 }, this::toolTip, "autoclicker-fabric.gui.help.mob-mode"));
+
+        this.addDrawableChild(
+                new TooltipButton(x - 135, y + 66, 130, 20, Language.GUI_CROP_MODE.getText(AutoClicker.leftHolding.isCropMode()), button -> {
+                    AutoClicker.leftHolding.setCropMode(!AutoClicker.leftHolding.isCropMode());
+                    button.setMessage(Language.GUI_CROP_MODE.getText(AutoClicker.leftHolding.isCropMode()));
+                    AutoClicker.getInstance().saveConfig();
+                }, this::toolTip, "autoclicker-fabric.gui.help.crop-mode"));
+
+        this.addDrawableChild(
+                blacklist = new OptionsTextFieldWidget(x + 5, y + 44, 130, 20, AutoClicker.getBlacklist())
+                );
+        blacklist.setEditableColor(0xFF5555); // reddish
+
+        this.addDrawableChild(
+                cropsList = new OptionsTextFieldWidget(x + 5, y + 66, 130, 20, AutoClicker.getCropsList())
+                );
     }
 
     private void toolTip(ButtonWidget button, MatrixStack matrixStack, int i, int i1) {
@@ -83,7 +108,7 @@ public class OptionsScreen extends Screen {
         this.renderOrderedTooltip(stack,
                 MinecraftClient.getInstance().textRenderer.wrapLines(StringVisitable.plain(text.getString()), 270),
                 x - 140,
-                y + 100);
+                y + 104);
     }
 
     @Override
@@ -101,18 +126,42 @@ public class OptionsScreen extends Screen {
         this.textRenderer.drawWithShadow(
                 matrices, Language.GUI_USE.getText(), this.width / 2f + 5, this.height / 2f - 56, 0xFFFFFF);
 
-        if (this.leftSpeedSlider.isMouseOver(mouseX, mouseY) || this.rightSpeedSlider.isMouseOver(mouseX, mouseY)) {
+        if (this.blacklist.isMouseOver(mouseX, mouseY)) {
+            this.renderHelpingTip(matrices, this.blacklistHelpingText);
+        } else if (this.cropsList.isMouseOver(mouseX, mouseY)) {
+            this.renderHelpingTip(matrices, this.cropsListHelpingText);
+        } else if (this.leftSpeedSlider.isMouseOver(mouseX, mouseY) || this.rightSpeedSlider.isMouseOver(mouseX, mouseY)) {
             this.renderHelpingTip(matrices, this.spammingHelpingText);
         }
     }
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == AutoClicker.rightClickToggle.getDefaultKey().getCode()) {
+        if (
+                !cropsList.isFocused() &&
+                !blacklist.isFocused() &&
+                keyCode == AutoClicker.rightClickToggle.getDefaultKey().getCode()
+           ) {
+            onClose();
             this.close();
             return true;
         }
 
+        if ( keyCode == GLFW.GLFW_KEY_ESCAPE ) {
+            onClose();
+        }
+
         return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    private void onClose() {
+        if ( !AutoClicker.getCropsList().equals( cropsList.getText() ) ) {
+            AutoClicker.setCropsList( cropsList.getText() );
+            AutoClicker.getInstance().saveConfig();
+        }
+        if ( !AutoClicker.getBlacklist().equals( blacklist.getText() ) ) {
+            AutoClicker.setBlacklist( blacklist.getText() );
+            AutoClicker.getInstance().saveConfig();
+        }
     }
 }
