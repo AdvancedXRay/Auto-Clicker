@@ -2,6 +2,8 @@ package pro.mikey.autoclicker;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -17,6 +19,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.MutableText;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.hit.BlockHitResult;
@@ -40,12 +43,10 @@ import java.util.HashSet;
 public class AutoClicker implements ModInitializer {
     public static final String MOD_ID = "autoclicker-fabric";
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
-    public static final KeyBinding rightClickToggle =
+    public static final KeyBinding toggleConfig =
             new KeyBinding("keybinding.open-gui", GLFW.GLFW_KEY_O, "category.autoclicker-fabric");
     private static final KeyBinding toggleHolding =
             new KeyBinding("keybinding.toggle-hold", GLFW.GLFW_KEY_I, "category.autoclicker-fabric");
-    private static final Path CONFIG_DIR = Paths.get(MinecraftClient.getInstance().runDirectory.getPath() + "/config");
-    private static final Path CONFIG_FILE = Paths.get(CONFIG_DIR + "/auto-clicker-fabric.json");
     public static Holding.AttackHolding leftHolding;
     public static Holding rightHolding;
     private static AutoClicker INSTANCE;
@@ -54,17 +55,7 @@ public class AutoClicker implements ModInitializer {
     private HashSet<String> parsedCropsSet = new HashSet<String>();
     private HashSet<String> parsedBlacklist = new HashSet<String>();
     private static int inertia = 0;
-    private Config config = new Config(
-            new Config.LeftMouseConfig(false, false, 0, false, false, false),
-            new Config.RightMouseConfig(false, false, 0),
-            DEFAULT_CROPS_LIST,
-            DEFAULT_BLACKLIST,
-            DEFAULT_CROP_INERTIA
-    );
-
-    public static final String DEFAULT_CROPS_LIST = "bamboo, beetroot, brown_mushroom, cactus, carrots, carved_pumpkin, cocoa, gravel, melon, nether_wart, potatoes, red_mushroom, sand, sugar_cane, sweet_berry_bush, wheat";
-    public static final String DEFAULT_BLACKLIST  = "armor_stand, player, villager";
-    public static final int DEFAULT_CROP_INERTIA = 500; // milliseconds
+    public static ModConfig CONFIG = null;
     
     public AutoClicker() {
         INSTANCE = this;
@@ -77,93 +68,32 @@ public class AutoClicker implements ModInitializer {
     @Override
     public void onInitialize() {
         LOGGER.info("Auto Clicker Initialised");
+        AutoClicker.CONFIG = AutoConfig.register(ModConfig.class, JanksonConfigSerializer::new).getConfig();
+        AutoConfig.getConfigHolder(ModConfig.class).registerSaveListener((manager, data) -> {
+            parsedCropsSet = parseList(data.leftClick.cropsList);
+            parsedBlacklist = parseList(data.leftClick.blacklist);
+            return ActionResult.SUCCESS;
+        });
 
         ClientTickEvents.END_CLIENT_TICK.register(this::clientTickEvent);
 
         KeyBindingHelper.registerKeyBinding(toggleHolding);
-        KeyBindingHelper.registerKeyBinding(rightClickToggle);
+        KeyBindingHelper.registerKeyBinding(toggleConfig);
 
         ClientLifecycleEvents.CLIENT_STARTED.register(this::clientReady);
         HudRenderCallback.EVENT.register(this::RenderGameOverlayEvent);
     }
 
     private void clientReady(MinecraftClient client) {
-        if (!Files.exists(CONFIG_FILE)) {
-            try {
-                Files.createDirectories(CONFIG_DIR);
-                Files.createFile(CONFIG_FILE);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            this.saveConfig();
-        } else {
-            try {
-                FileReader json = new FileReader(CONFIG_FILE.toFile());
-                Config config = new Gson().fromJson(json, Config.class);
-                json.close();
-                if (config != null) {
-                    this.config = config;
-                }
-            } catch (JsonIOException | IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        leftHolding = new Holding.AttackHolding(client.options.attackKey, this.config.getLeftClick());
-        rightHolding = new Holding(client.options.useKey, this.config.getRightClick());
-        parsedCropsSet = parseList(getCropsList());
-        parsedBlacklist = parseList(getBlacklist());
-    }
-
-    public static String getCropsList() {
-        String cropsList = getInstance().config.getCropsList();
-        if ( cropsList == null || cropsList.trim() == "" )
-            return DEFAULT_CROPS_LIST;
-        else
-            return cropsList.trim();
-    }
-
-    public static void setCropsList(String value) {
-        getInstance().config.setCropsList(value);
-        getInstance().parsedCropsSet = parseList(getCropsList());
-    }
-
-    public static String getBlacklist() {
-        String blacklist = getInstance().config.getBlacklist();
-        if ( blacklist == null || blacklist.trim() == "" )
-            return DEFAULT_BLACKLIST;
-        else
-            return blacklist.trim();
-    }
-
-    public static void setBlacklist(String value) {
-        getInstance().config.setBlacklist(value);
-        getInstance().parsedBlacklist = parseList(getBlacklist());
+        leftHolding = new Holding.AttackHolding(client.options.attackKey, CONFIG.leftClick);
+        rightHolding = new Holding(client.options.useKey, CONFIG.rightClick.shared);
+        parsedCropsSet = parseList(CONFIG.leftClick.cropsList);
+        parsedBlacklist = parseList(CONFIG.leftClick.blacklist);
     }
 
     private static HashSet<String> parseList(String list) {
         String[] strParts = list.split("[\\s,]+");
         return new HashSet<String>( Arrays.asList(strParts) );
-    }
-
-    public static void setCropInertia(int value) {
-        getInstance().config.setCropInertia(value);
-    }
-
-    public static int getCropInertia() {
-        return getInstance().config.getCropInertia();
-    }
-
-    public void saveConfig() {
-        try {
-            FileWriter writer = new FileWriter(CONFIG_FILE.toFile());
-            new Gson().toJson(this.config, writer);
-            writer.flush();
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void RenderGameOverlayEvent(MatrixStack matrixStack, float delta) {
@@ -173,7 +103,10 @@ public class AutoClicker implements ModInitializer {
 
         int y = 10;
         if (leftHolding.isActive()) {
-            MinecraftClient.getInstance().textRenderer.drawWithShadow(matrixStack, Language.HUD_HOLDING.getText(I18n.translate(leftHolding.getKey().getTranslationKey())), 10, y, 0xffffff);
+            String text = Language.HUD_HOLDING.getText(I18n.translate(leftHolding.getKey().getTranslationKey())).getString();
+            if (CONFIG.leftClick.showInertia && inertia > 0)
+                text = text + " [" + inertia + "]";
+            MinecraftClient.getInstance().textRenderer.drawWithShadow(matrixStack, text, 10, y, 0xffffff);
             y += 15;
         }
 
@@ -252,7 +185,7 @@ public class AutoClicker implements ModInitializer {
                     boolean cropInSight = parsedCropsSet.contains(crop_key) && !isBlacklisted(crop_key);
                     if ( cropInSight ) {
                         shouldRelease = false;
-                        inertia = getCropInertia();
+                        inertia = CONFIG.leftClick.inertia;
                     }
                 }
             }
@@ -347,8 +280,8 @@ public class AutoClicker implements ModInitializer {
             }
         }
 
-        while (rightClickToggle.wasPressed()) {
-            mc.setScreen(new OptionsScreen());
+        while (toggleConfig.wasPressed()) {
+            mc.setScreen(AutoConfig.getConfigScreen(ModConfig.class, mc.currentScreen).get());
         }
     }
 }

@@ -4,25 +4,17 @@ import net.minecraft.client.option.KeyBinding;
 
 public class Holding {
     private final KeyBinding key;
-    Config.SharedConfig config;
+    ModConfig.SharedConfig config;
     private int timeout;
 
-    public Holding(KeyBinding key, Config.SharedConfig config) {
+    public Holding(KeyBinding key, ModConfig.SharedConfig config) {
         this.config = config;
         this.key = key;
-        this.timeout = config.getCpt();
+        this.timeout = config.speed;
     }
 
     public boolean isRespectCooldown() {
-        return this.config instanceof Config.LeftMouseConfig && ((Config.LeftMouseConfig) this.config).isRespectCooldown();
-    }
-
-    public void setRespectCooldown(boolean respectCooldown) {
-        if (!(this.config instanceof Config.LeftMouseConfig)) {
-            return;
-        }
-
-        ((Config.LeftMouseConfig) this.config).setRespectCooldown(respectCooldown);
+        return false;
     }
 
     public KeyBinding getKey() {
@@ -30,27 +22,15 @@ public class Holding {
     }
 
     public boolean isActive() {
-        return this.config.isActive();
-    }
-
-    public void setActive(boolean active) {
-        this.config.setActive(active);
+        return this.config.active;
     }
 
     public boolean isSpamming() {
-        return this.config.isSpamming();
-    }
-
-    public void setSpamming(boolean spamming) {
-        this.config.setSpamming(spamming);
+        return this.config.spamming;
     }
 
     public int getSpeed() {
-        return this.config.getCpt();
-    }
-
-    public void setSpeed(int speed) {
-        this.config.setCpt(speed);
+        return this.config.speed;
     }
 
     public int getTimeout() {
@@ -58,7 +38,7 @@ public class Holding {
     }
 
     public void resetTimeout() {
-        this.timeout = this.config.getCpt();
+        this.timeout = this.config.speed;
     }
 
     public void decreaseTimeout() {
@@ -71,24 +51,20 @@ public class Holding {
 
     public static class AttackHolding extends Holding {
 
-        public AttackHolding(KeyBinding key, Config.LeftMouseConfig config) {
-            super(key, config);
+        public AttackHolding(KeyBinding key, ModConfig.LeftMouseConfig config) {
+            super(key, config.shared);
         }
 
         public boolean isMobMode() {
-            return ((Config.LeftMouseConfig) this.config).isMobMode();
+            return AutoClicker.CONFIG.leftClick.mobMode;
         }
 
         public boolean isCropMode() {
-            return ((Config.LeftMouseConfig) this.config).isCropMode();
+            return AutoClicker.CONFIG.leftClick.cropMode;
         }
 
-        public void setMobMode(boolean mobMode) {
-            ((Config.LeftMouseConfig) this.config).setMobMode(mobMode);
-        }
-
-        public void setCropMode(boolean mobMode) {
-            ((Config.LeftMouseConfig) this.config).setCropMode(mobMode);
+        public boolean isRespectCooldown() {
+            return AutoClicker.CONFIG.leftClick.respectCooldown;
         }
     }
 }

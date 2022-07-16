@@ -15,6 +15,9 @@
   "icon": "assets/autoclicker-fabric/icon.png",
   "environment": "client",
   "entrypoints": {
+    "modmenu": [
+      "pro.mikey.autoclicker.AutoClickerMenuApiImpl"
+    ],
     "main": [
       "pro.mikey.autoclicker.AutoClicker"
     ]

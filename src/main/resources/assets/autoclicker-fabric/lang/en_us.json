@@ -5,22 +5,46 @@
   "autoclicker-fabric.hud.holding": "Holding %s",
   "autoclicker-fabric.msg.holding-keys": "Holding keys!",
   "autoclicker-fabric.msg.released-keys": "Released keys!",
-  "autoclicker-fabric.gui.speed": "Speed: %f ticks",
-  "autoclicker-fabric.gui.inertia": "Inertia: %f ticks",
-  "autoclicker-fabric.gui.active": "Active: %s",
-  "autoclicker-fabric.gui.spamming": "Spamming: %s",
-  "autoclicker-fabric.gui.attack": "Attack (left click)",
-  "autoclicker-fabric.gui.use": "Use (right click)",
-  "autoclicker-fabric.gui.respect": "Respect cooldown: %s",
-  "autoclicker-fabric.gui.mob-mode": "Mob mode: %s",
-  "autoclicker-fabric.gui.crop-mode": "Crop mode: %s",
-  "autoclicker-fabric.gui.help.active": "If enabled, it will use the options below to determine how to auto click",
-  "autoclicker-fabric.gui.help.spamming": "When enabled, the key will be pressed then unpressed, you can control how quickly this happens below.",
-  "autoclicker-fabric.gui.help.cooldown": "When enabled, if a mob is detected, the button will be tapped in respect to the cooldown of the attack.",
-  "autoclicker-fabric.gui.help.mob-mode": "(Must have 'Respect Cooldown' enabled). When enabled, the button will be clicked when a mob is in direct light of sight.",
-  "autoclicker-fabric.gui.help.crop-mode": "(Must have 'Respect Cooldown' enabled). When enabled, the button will be clicked when a crop is in direct light of sight.",
-  "autoclicker-fabric.gui.help.inertia": "Hold attack button down for N ticks after seeing last crop.",
-  "autoclicker-fabric.gui.help.crops-list": "Treat these entities as crops. (clear to reset to default)",
-  "autoclicker-fabric.gui.help.blacklist": "Do NOT attack any of these entities. (clear to reset to default)",
-  "autoclicker-fabric.gui.help.spam-speed": "When 'spamming' is enabled, this setting will determine how many ticks are between each click, 0 = off, 1+ = 1 tick of delay."
+
+  "text.autoconfig.autoclicker-fabric.category.attack": "Attack (left click)",
+  "text.autoconfig.autoclicker-fabric.category.use": "Use (right click)",
+
+  "text.autoconfig.autoclicker-fabric.option.leftClick.shared.active": "Active",
+  "text.autoconfig.autoclicker-fabric.option.leftClick.shared.active.@Tooltip":
+    "If enabled, it will use the options below to determine how to auto click",
+  "text.autoconfig.autoclicker-fabric.option.leftClick.shared.spamming": "Spamming",
+  "text.autoconfig.autoclicker-fabric.option.leftClick.shared.spamming.@Tooltip": 
+    "When enabled, the key will be pressed then unpressed,\nyou can control how quickly this happens below.",
+  "text.autoconfig.autoclicker-fabric.option.leftClick.shared.speed": "Speed (ticks)",
+  "text.autoconfig.autoclicker-fabric.option.leftClick.shared.speed.@Tooltip":
+    "When 'spamming' is enabled, this setting will determine\nhow many ticks are between each click, 0 = off, 1+ = 1 tick of delay.",
+
+  "text.autoconfig.autoclicker-fabric.option.leftClick.respectCooldown": "Respect cooldown",
+  "text.autoconfig.autoclicker-fabric.option.leftClick.respectCooldown.@Tooltip":
+    "When enabled, if a mob is detected, the button will be\ntapped in respect to the cooldown of the attack.",
+  "text.autoconfig.autoclicker-fabric.option.leftClick.mobMode": "Mob mode",
+  "text.autoconfig.autoclicker-fabric.option.leftClick.mobMode.@Tooltip":
+    "(Must have 'Respect Cooldown' enabled). When enabled,\nthe button will be clicked when a mob is in direct line of sight.",
+  "text.autoconfig.autoclicker-fabric.option.leftClick.cropMode": "Crop mode",
+  "text.autoconfig.autoclicker-fabric.option.leftClick.cropMode.@Tooltip":
+    "(Must have 'Respect Cooldown' enabled). When enabled,\nthe button will be clicked when a crop is in direct line of sight.",
+  "text.autoconfig.autoclicker-fabric.option.leftClick.inertia": "Inertia (ticks)",
+  "text.autoconfig.autoclicker-fabric.option.leftClick.inertia.@Tooltip":
+    "Hold attack button down for N ticks after seeing last crop.",
+  "text.autoconfig.autoclicker-fabric.option.leftClick.showInertia": "Show inertia counter",
+  "text.autoconfig.autoclicker-fabric.option.leftClick.blacklist": "Blacklist",
+  "text.autoconfig.autoclicker-fabric.option.leftClick.blacklist.@Tooltip":
+    "Do NOT attack any of these entities (blocks or mobs)",
+  "text.autoconfig.autoclicker-fabric.option.leftClick.cropsList": "Crops list",
+  "text.autoconfig.autoclicker-fabric.option.leftClick.cropsList.@Tooltip": "Treat these blocks as crops.",
+
+  "text.autoconfig.autoclicker-fabric.option.rightClick.shared.active": "Active",
+  "text.autoconfig.autoclicker-fabric.option.rightClick.shared.active.@Tooltip":
+    "If enabled, it will use the options below to determine how to auto click",
+  "text.autoconfig.autoclicker-fabric.option.rightClick.shared.spamming": "Spamming",
+  "text.autoconfig.autoclicker-fabric.option.rightClick.shared.spamming.@Tooltip": 
+    "When enabled, the key will be pressed then unpressed,\nyou can control how quickly this happens below.",
+  "text.autoconfig.autoclicker-fabric.option.rightClick.shared.speed": "Speed (ticks)",
+  "text.autoconfig.autoclicker-fabric.option.rightClick.shared.speed.@Tooltip":
+    "When 'spamming' is enabled, this setting will determine\nhow many ticks are between each click, 0 = off, 1+ = 1 tick of delay."
 }
