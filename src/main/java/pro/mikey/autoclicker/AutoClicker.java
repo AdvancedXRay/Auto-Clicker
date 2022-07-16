@@ -53,15 +53,18 @@ public class AutoClicker implements ModInitializer {
     private boolean autoClicked = false;
     private HashSet<String> parsedCropsSet = new HashSet<String>();
     private HashSet<String> parsedBlacklist = new HashSet<String>();
+    private static int inertia = 0;
     private Config config = new Config(
             new Config.LeftMouseConfig(false, false, 0, false, false, false),
             new Config.RightMouseConfig(false, false, 0),
             DEFAULT_CROPS_LIST,
-            DEFAULT_BLACKLIST
+            DEFAULT_BLACKLIST,
+            DEFAULT_CROP_INERTIA
     );
 
     public static final String DEFAULT_CROPS_LIST = "bamboo, beetroot, brown_mushroom, cactus, carrots, carved_pumpkin, cocoa, gravel, melon, nether_wart, potatoes, red_mushroom, sand, sugar_cane, sweet_berry_bush, wheat";
     public static final String DEFAULT_BLACKLIST  = "armor_stand, player, villager";
+    public static final int DEFAULT_CROP_INERTIA = 500; // milliseconds
     
     public AutoClicker() {
         INSTANCE = this;
@@ -144,6 +147,14 @@ public class AutoClicker implements ModInitializer {
         return new HashSet<String>( Arrays.asList(strParts) );
     }
 
+    public static void setCropInertia(int value) {
+        getInstance().config.setCropInertia(value);
+    }
+
+    public static int getCropInertia() {
+        return getInstance().config.getCropInertia();
+    }
+
     public void saveConfig() {
         try {
             FileWriter writer = new FileWriter(CONFIG_FILE.toFile());
@@ -222,9 +233,11 @@ public class AutoClicker implements ModInitializer {
             return;
         }
 
-        // Normal holding or cool down behaviour
-        // respect cool down
-        if (key.isRespectCooldown()) {
+        if ( inertia > 0 ) {
+            // Hold the click and decrease inertia counter
+            key.getKey().setPressed(true);
+            inertia--;
+        } else if ( key.isRespectCooldown() ) {
             boolean shouldRelease = true;
 
             if (((Holding.AttackHolding) key).isMobMode()) {
@@ -236,7 +249,11 @@ public class AutoClicker implements ModInitializer {
             if (((Holding.AttackHolding) key).isCropMode()) {
                 String crop_key = this.getCropPlayerLookingAt(mc);
                 if ( crop_key != null ) {
-                    shouldRelease = isBlacklisted(crop_key) || !parsedCropsSet.contains(crop_key);
+                    boolean cropInSight = parsedCropsSet.contains(crop_key) && !isBlacklisted(crop_key);
+                    if ( cropInSight ) {
+                        shouldRelease = false;
+                        inertia = getCropInertia();
+                    }
                 }
             }
 

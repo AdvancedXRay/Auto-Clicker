@@ -5,12 +5,14 @@ public class Config {
     private final RightMouseConfig rightClick;
     private String cropsList;
     private String blacklist;
+    private int cropInertia;
 
-    public Config(LeftMouseConfig leftClick, RightMouseConfig rightClick, String cropsList, String blacklist) {
+    public Config(LeftMouseConfig leftClick, RightMouseConfig rightClick, String cropsList, String blacklist, int cropInertia) {
         this.leftClick = leftClick;
         this.rightClick = rightClick;
         this.cropsList = cropsList;
         this.blacklist = blacklist;
+        this.cropInertia = cropInertia;
     }
 
     public LeftMouseConfig getLeftClick() {
@@ -37,6 +39,14 @@ public class Config {
         blacklist = value;
     }
 
+    public int getCropInertia() {
+        return this.cropInertia;
+    }
+
+    public void setCropInertia(int value) {
+        cropInertia = value;
+    }
+
     @Override
     public String toString() {
         return "Config{" +
@@ -44,6 +54,7 @@ public class Config {
                 ", rightClick=" + this.rightClick +
                 ", blacklist=\"" + this.blacklist + "\"" +
                 ", cropsList=\"" + this.cropsList + "\"" +
+                ", cropInertia=" + this.cropInertia +
                 '}';
     }
 

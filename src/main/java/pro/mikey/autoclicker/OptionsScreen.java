@@ -14,8 +14,10 @@ public class OptionsScreen extends Screen {
     private final Text blacklistHelpingText;
     private final Text cropsListHelpingText;
     private final Text spammingHelpingText;
+    private final Text inertiaHelpingText;
     private OptionsSliderWidget leftSpeedSlider;
     private OptionsSliderWidget rightSpeedSlider;
+    private OptionsSliderWidget cropInertiaSlider;
     private TextFieldWidget cropsList;
     private TextFieldWidget blacklist;
 
@@ -24,6 +26,7 @@ public class OptionsScreen extends Screen {
         this.blacklistHelpingText = Text.translatable("autoclicker-fabric.gui.help.blacklist");
         this.cropsListHelpingText = Text.translatable("autoclicker-fabric.gui.help.crops-list");
         this.spammingHelpingText  = Text.translatable("autoclicker-fabric.gui.help.spam-speed");
+        this.inertiaHelpingText   = Text.translatable("autoclicker-fabric.gui.help.inertia");
     }
 
     @Override
@@ -88,6 +91,11 @@ public class OptionsScreen extends Screen {
                     AutoClicker.getInstance().saveConfig();
                 }, this::toolTip, "autoclicker-fabric.gui.help.crop-mode"));
 
+        this.addDrawableChild(this.cropInertiaSlider = new OptionsSliderWidget(x - 135, y + 88, 130, 20, Language.GUI_INERTIA.getText(), AutoClicker.getCropInertia(), value -> {
+            AutoClicker.setCropInertia(value);
+            AutoClicker.getInstance().saveConfig();
+        }));
+
         this.addDrawableChild(
                 blacklist = new OptionsTextFieldWidget(x + 5, y + 44, 130, 20, AutoClicker.getBlacklist())
                 );
@@ -108,7 +116,7 @@ public class OptionsScreen extends Screen {
         this.renderOrderedTooltip(stack,
                 MinecraftClient.getInstance().textRenderer.wrapLines(StringVisitable.plain(text.getString()), 270),
                 x - 140,
-                y + 104);
+                y + 128);
     }
 
     @Override
@@ -132,6 +140,8 @@ public class OptionsScreen extends Screen {
             this.renderHelpingTip(matrices, this.cropsListHelpingText);
         } else if (this.leftSpeedSlider.isMouseOver(mouseX, mouseY) || this.rightSpeedSlider.isMouseOver(mouseX, mouseY)) {
             this.renderHelpingTip(matrices, this.spammingHelpingText);
+        } else if (this.cropInertiaSlider.isMouseOver(mouseX, mouseY)) {
+            this.renderHelpingTip(matrices, this.inertiaHelpingText);
         }
     }
 

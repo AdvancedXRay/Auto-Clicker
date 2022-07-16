@@ -14,7 +14,8 @@ public enum Language {
     GUI_USE("autoclicker-fabric.gui.use"),
     GUI_RESPECT_COOLDOWN("autoclicker-fabric.gui.respect"),
     GUI_MOB_MODE("autoclicker-fabric.gui.mob-mode"),
-    GUI_CROP_MODE("autoclicker-fabric.gui.crop-mode");
+    GUI_CROP_MODE("autoclicker-fabric.gui.crop-mode"),
+    GUI_INERTIA("autoclicker-fabric.gui.inertia");
 
     private final String key;
     MutableText text;
