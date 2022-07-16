@@ -8,6 +8,7 @@
 
   "text.autoconfig.autoclicker-fabric.category.attack": "Attack (left click)",
   "text.autoconfig.autoclicker-fabric.category.use": "Use (right click)",
+  "text.autoconfig.autoclicker-fabric.category.default": "Misc",
 
   "text.autoconfig.autoclicker-fabric.option.leftClick.shared.active": "Active",
   "text.autoconfig.autoclicker-fabric.option.leftClick.shared.active.@Tooltip":
@@ -46,5 +47,8 @@
     "When enabled, the key will be pressed then unpressed,\nyou can control how quickly this happens below.",
   "text.autoconfig.autoclicker-fabric.option.rightClick.shared.speed": "Speed (ticks)",
   "text.autoconfig.autoclicker-fabric.option.rightClick.shared.speed.@Tooltip":
-    "When 'spamming' is enabled, this setting will determine\nhow many ticks are between each click, 0 = off, 1+ = 1 tick of delay."
+    "When 'spamming' is enabled, this setting will determine\nhow many ticks are between each click, 0 = off, 1+ = 1 tick of delay.",
+
+  "text.autoconfig.autoclicker-fabric.option.statusTextX": "Status text X",
+  "text.autoconfig.autoclicker-fabric.option.statusTextY": "Status text Y"
 }

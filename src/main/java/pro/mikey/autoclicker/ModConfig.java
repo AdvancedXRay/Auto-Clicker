@@ -18,6 +18,9 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Gui.TransitiveObject
     RightMouseConfig rightClick = new RightMouseConfig();
 
+    int statusTextX = 10;
+    int statusTextY = 10;
+
     static class LeftMouseConfig {
         @ConfigEntry.Gui.TransitiveObject
         SharedConfig shared = new SharedConfig();

@@ -101,17 +101,17 @@ public class AutoClicker implements ModInitializer {
             return;
         }
 
-        int y = 10;
+        int y = CONFIG.statusTextY;
         if (leftHolding.isActive()) {
             String text = Language.HUD_HOLDING.getText(I18n.translate(leftHolding.getKey().getTranslationKey())).getString();
             if (CONFIG.leftClick.showInertia && inertia > 0)
                 text = text + " [" + inertia + "]";
-            MinecraftClient.getInstance().textRenderer.drawWithShadow(matrixStack, text, 10, y, 0xffffff);
+            MinecraftClient.getInstance().textRenderer.drawWithShadow(matrixStack, text, CONFIG.statusTextX, y, 0xffffff);
             y += 15;
         }
 
         if (rightHolding.isActive()) {
-            MinecraftClient.getInstance().textRenderer.drawWithShadow(matrixStack, Language.HUD_HOLDING.getText(I18n.translate(rightHolding.getKey().getTranslationKey())), 10, y, 0xffffff);
+            MinecraftClient.getInstance().textRenderer.drawWithShadow(matrixStack, Language.HUD_HOLDING.getText(I18n.translate(rightHolding.getKey().getTranslationKey())), CONFIG.statusTextX, y, 0xffffff);
         }
     }
 
