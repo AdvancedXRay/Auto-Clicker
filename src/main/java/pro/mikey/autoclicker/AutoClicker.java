@@ -89,6 +89,8 @@ public class AutoClicker implements ModInitializer {
         rightHolding = new Holding(client.options.useKey, CONFIG.rightClick.shared);
         parsedCropsSet = parseList(CONFIG.leftClick.cropsList);
         parsedBlacklist = parseList(CONFIG.leftClick.blacklist);
+        if (CONFIG.activateOnStart)
+            isActive = true;
     }
 
     private static HashSet<String> parseList(String list) {

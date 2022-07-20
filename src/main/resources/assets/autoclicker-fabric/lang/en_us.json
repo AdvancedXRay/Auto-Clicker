@@ -49,6 +49,7 @@
   "text.autoconfig.autoclicker-fabric.option.rightClick.shared.speed.@Tooltip":
     "When 'spamming' is enabled, this setting will determine\nhow many ticks are between each click, 0 = off, 1+ = 1 tick of delay.",
 
+  "text.autoconfig.autoclicker-fabric.option.activateOnStart": "Activate on game start",
   "text.autoconfig.autoclicker-fabric.option.statusTextX": "Status text X",
   "text.autoconfig.autoclicker-fabric.option.statusTextY": "Status text Y"
 }

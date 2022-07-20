@@ -18,6 +18,7 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Gui.TransitiveObject
     RightMouseConfig rightClick = new RightMouseConfig();
 
+    boolean activateOnStart = false;
     int statusTextX = 10;
     int statusTextY = 10;
 
