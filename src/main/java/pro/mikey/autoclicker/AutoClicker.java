@@ -12,7 +12,6 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.text.MutableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -38,11 +37,13 @@ public class AutoClicker implements ModInitializer {
     private static final Path CONFIG_FILE = Paths.get(CONFIG_DIR + "/auto-clicker-fabric.json");
     public static Holding.AttackHolding leftHolding;
     public static Holding rightHolding;
+    public static Holding jumpHolding;
     private static AutoClicker INSTANCE;
     private boolean isActive = false;
     private Config config = new Config(
             new Config.LeftMouseConfig(false, false, 0, false, false),
-            new Config.RightMouseConfig(false, false, 0)
+            new Config.RightMouseConfig(false, false, 0),
+            new Config.JumpConfig(false, false, 0)
     );
     
     public AutoClicker() {
@@ -81,7 +82,7 @@ public class AutoClicker implements ModInitializer {
                 FileReader json = new FileReader(CONFIG_FILE.toFile());
                 Config config = new Gson().fromJson(json, Config.class);
                 json.close();
-                if (config != null) {
+                if (config != null && config.getJump() != null) {
                     this.config = config;
                 }
             } catch (JsonIOException | IOException e) {
@@ -91,11 +92,13 @@ public class AutoClicker implements ModInitializer {
 
         leftHolding = new Holding.AttackHolding(client.options.attackKey, this.config.getLeftClick());
         rightHolding = new Holding(client.options.useKey, this.config.getRightClick());
+        jumpHolding = new Holding(client.options.jumpKey, this.config.getJump());
     }
 
     public void saveConfig() {
         try {
             FileWriter writer = new FileWriter(CONFIG_FILE.toFile());
+            
             new Gson().toJson(this.config, writer);
             writer.flush();
             writer.close();
@@ -105,7 +108,7 @@ public class AutoClicker implements ModInitializer {
     }
 
     private void RenderGameOverlayEvent(MatrixStack matrixStack, float delta) {
-        if ((!leftHolding.isActive() && !rightHolding.isActive()) || !this.isActive) {
+        if ((!leftHolding.isActive() && !rightHolding.isActive() && !jumpHolding.isActive()) || !this.isActive) {
             return;
         }
 
@@ -117,6 +120,11 @@ public class AutoClicker implements ModInitializer {
 
         if (rightHolding.isActive()) {
             MinecraftClient.getInstance().textRenderer.drawWithShadow(matrixStack, Language.HUD_HOLDING.getText(I18n.translate(rightHolding.getKey().getTranslationKey())), 10, y, 0xffffff);
+            y += 15;
+        }
+
+        if (jumpHolding.isActive()) {
+            MinecraftClient.getInstance().textRenderer.drawWithShadow(matrixStack, Language.HUD_HOLDING.getText(I18n.translate(jumpHolding.getKey().getTranslationKey())), 10, y, 0xffffff);
         }
     }
 
@@ -132,6 +140,10 @@ public class AutoClicker implements ModInitializer {
 
             if (rightHolding.isActive()) {
                 this.handleActiveHolding(mc, rightHolding);
+            }
+
+            if (jumpHolding.isActive()) {
+                this.handleActiveHolding(mc, jumpHolding);
             }
         }
 
@@ -226,6 +238,7 @@ public class AutoClicker implements ModInitializer {
             if (!this.isActive) {
                 leftHolding.getKey().setPressed(false);
                 rightHolding.getKey().setPressed(false);
+                jumpHolding.getKey().setPressed(false);
             }
         }
 
