@@ -1,6 +1,7 @@
 {
   "category.autoclicker-fabric": "Auto clicker",
   "keybinding.toggle-hold": "Toggle Holding keys",
+  "keybinding.toggle-jump": "Toggle Holding jump",
   "keybinding.open-gui": "Open auto clicker GUI",
   "autoclicker-fabric.hud.holding": "Holding %s",
   "autoclicker-fabric.msg.holding-keys": "Holding keys!",
@@ -10,6 +11,7 @@
   "autoclicker-fabric.gui.spamming": "Spamming: %s",
   "autoclicker-fabric.gui.attack": "Attack (left click)",
   "autoclicker-fabric.gui.use": "Use (right click)",
+  "autoclicker-fabric.gui.jump": "Use (jump)",
   "autoclicker-fabric.gui.respect": "Respect cooldown: %s",
   "autoclicker-fabric.gui.mob-mode": "Mob mode: %s",
   "autoclicker-fabric.gui.help.active": "If enabled, it will use the options below to determine how to auto click",
