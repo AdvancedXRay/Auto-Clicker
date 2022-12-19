@@ -1,5 +1,7 @@
 package pro.mikey.autoclicker;
 
+import java.util.HashMap;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -8,93 +10,119 @@ import net.minecraft.text.Text;
 import net.minecraft.text.StringVisitable;
 
 public class OptionsScreen extends Screen {
-    private final Text spammingHelpingText;
-    private OptionsSliderWidget leftSpeedSlider;
-    private OptionsSliderWidget rightSpeedSlider;
-    private OptionsSliderWidget jumpSpeedSlider;
+    private final HashMap<ButtonWidget, String> buttonTooltips = new HashMap<>();
+    private final HashMap<OptionsSliderWidget, String> sliderTooltips = new HashMap<>();
 
     protected OptionsScreen() {
         super(Text.empty());
-        this.spammingHelpingText = Text.translatable("autoclicker-fabric.gui.help.spam-speed");
     }
 
     @Override
     protected void init() {
         int x = this.width / 2, y = this.height / 2;
-
-        this.addDrawableChild(
-                new TooltipButton(x - 200, y - 44, 130, 20, Language.GUI_ACTIVE.getText(AutoClicker.leftHolding.isActive()), button -> {
+        
+        this.buttonTooltips.put(this.addDrawableChild(
+            ButtonWidget.builder(
+                Language.GUI_ACTIVE.getText(AutoClicker.leftHolding.isActive()), (button) -> {
                     AutoClicker.leftHolding.setActive(!AutoClicker.leftHolding.isActive());
                     button.setMessage(Language.GUI_ACTIVE.getText(AutoClicker.leftHolding.isActive()));
                     AutoClicker.getInstance().saveConfig();
-                }, this::toolTip, "autoclicker-fabric.gui.help.active"));
-
-        this.addDrawableChild(
-                new TooltipButton(x - 65, y - 44, 130, 20, Language.GUI_ACTIVE.getText(AutoClicker.rightHolding.isActive()), button -> {
+            })
+            .dimensions(x - 200, y - 44, 130, 20)
+            .build()
+        ), "autoclicker-fabric.gui.help.active");
+        
+        this.buttonTooltips.put(this.addDrawableChild(
+            ButtonWidget.builder(
+                Language.GUI_ACTIVE.getText(AutoClicker.rightHolding.isActive()), (button) -> {
                     AutoClicker.rightHolding.setActive(!AutoClicker.rightHolding.isActive());
                     button.setMessage(Language.GUI_ACTIVE.getText(AutoClicker.rightHolding.isActive()));
                     AutoClicker.getInstance().saveConfig();
-                }, this::toolTip, "autoclicker-fabric.gui.help.active"));
-
-        this.addDrawableChild(
-                new TooltipButton(x + 70 , y - 44, 130, 20, Language.GUI_ACTIVE.getText(AutoClicker.jumpHolding.isActive()), button -> {
+            })
+            .dimensions(x - 65, y - 44, 130, 20)
+            .build()
+        ), "autoclicker-fabric.gui.help.active");
+        
+        this.buttonTooltips.put(this.addDrawableChild(
+            ButtonWidget.builder(
+                Language.GUI_ACTIVE.getText(AutoClicker.jumpHolding.isActive()), (button) -> {
                     AutoClicker.jumpHolding.setActive(!AutoClicker.jumpHolding.isActive());
                     button.setMessage(Language.GUI_ACTIVE.getText(AutoClicker.jumpHolding.isActive()));
                     AutoClicker.getInstance().saveConfig();
-                }, this::toolTip, "autoclicker-fabric.gui.help.active"));
-
-        this.addDrawableChild(
-                new TooltipButton(x - 200, y - 22, 130, 20, Language.GUI_SPAMMING.getText(AutoClicker.leftHolding.isSpamming()), button -> {
+            })
+            .dimensions(x + 70 , y - 44, 130, 20)
+            .build()
+        ), "autoclicker-fabric.gui.help.active");
+        
+        this.buttonTooltips.put(this.addDrawableChild(
+            ButtonWidget.builder(
+                Language.GUI_SPAMMING.getText(AutoClicker.leftHolding.isSpamming()), (button) -> {
                     AutoClicker.leftHolding.setSpamming(!AutoClicker.leftHolding.isSpamming());
                     button.setMessage(Language.GUI_SPAMMING.getText(AutoClicker.leftHolding.isSpamming()));
                     AutoClicker.getInstance().saveConfig();
-                }, this::toolTip, "autoclicker-fabric.gui.help.spamming"));
-
-        this.addDrawableChild(
-                new TooltipButton(x - 65, y - 22, 130, 20, Language.GUI_SPAMMING.getText(AutoClicker.rightHolding.isSpamming()), button -> {
+            })
+            .dimensions(x - 200, y - 22, 130, 20)
+            .build()
+        ), "autoclicker-fabric.gui.help.spamming");
+        
+        this.buttonTooltips.put(this.addDrawableChild(
+            ButtonWidget.builder(
+                Language.GUI_SPAMMING.getText(AutoClicker.rightHolding.isSpamming()), (button) -> {
                     AutoClicker.rightHolding.setSpamming(!AutoClicker.rightHolding.isSpamming());
                     button.setMessage(Language.GUI_SPAMMING.getText(AutoClicker.rightHolding.isSpamming()));
                     AutoClicker.getInstance().saveConfig();
-                }, this::toolTip, "autoclicker-fabric.gui.help.spamming"));
-
-        this.addDrawableChild(
-                new TooltipButton(x + 70, y - 22, 130, 20, Language.GUI_SPAMMING.getText(AutoClicker.jumpHolding.isSpamming()), button -> {
+            })
+            .dimensions(x - 65, y - 22, 130, 20)
+            .build()
+        ), "autoclicker-fabric.gui.help.spamming");
+        
+        this.buttonTooltips.put(this.addDrawableChild(
+            ButtonWidget.builder(
+                Language.GUI_SPAMMING.getText(AutoClicker.jumpHolding.isSpamming()), (button) -> {
                     AutoClicker.jumpHolding.setSpamming(!AutoClicker.jumpHolding.isSpamming());
                     button.setMessage(Language.GUI_SPAMMING.getText(AutoClicker.jumpHolding.isSpamming()));
                     AutoClicker.getInstance().saveConfig();
-                }, this::toolTip, "autoclicker-fabric.gui.help.spamming"));
-
-
-        this.addDrawableChild(this.leftSpeedSlider = new OptionsSliderWidget(x - 200, y, 130, 20, Language.GUI_SPEED.getText(), AutoClicker.leftHolding.getSpeed() / 50f, value -> {
+            })
+            .dimensions(x + 70, y - 22, 130, 20)
+            .build()
+        ), "autoclicker-fabric.gui.help.spamming");
+        
+        this.sliderTooltips.put(this.addDrawableChild(new OptionsSliderWidget(x - 200, y, 130, 20, Language.GUI_SPEED.getText(), AutoClicker.leftHolding.getSpeed() / 50f, value -> {
             AutoClicker.leftHolding.setSpeed(value);
             AutoClicker.getInstance().saveConfig();
-        }));
-        this.addDrawableChild(this.rightSpeedSlider = new OptionsSliderWidget(x - 65, y, 130, 20, Language.GUI_SPEED.getText(), AutoClicker.rightHolding.getSpeed() / 50f, value -> {
+        })), "autoclicker-fabric.gui.help.spam-speed");
+        
+        this.sliderTooltips.put(this.addDrawableChild(new OptionsSliderWidget(x - 65, y, 130, 20, Language.GUI_SPEED.getText(), AutoClicker.rightHolding.getSpeed() / 50f, value -> {
             AutoClicker.rightHolding.setSpeed(value);
             AutoClicker.getInstance().saveConfig();
-        }));
-        this.addDrawableChild(this.jumpSpeedSlider = new OptionsSliderWidget(x + 70, y, 130, 20, Language.GUI_SPEED.getText(), AutoClicker.jumpHolding.getSpeed() / 50f, value -> {
+        })), "autoclicker-fabric.gui.help.spam-speed");
+        
+        this.sliderTooltips.put(this.addDrawableChild(new OptionsSliderWidget(x + 70, y, 130, 20, Language.GUI_SPEED.getText(), AutoClicker.jumpHolding.getSpeed() / 50f, value -> {
             AutoClicker.jumpHolding.setSpeed(value);
             AutoClicker.getInstance().saveConfig();
-        }));
-
-        this.addDrawableChild(
-                new TooltipButton(x - 200, y + 22, 130, 20, Language.GUI_RESPECT_COOLDOWN.getText(AutoClicker.leftHolding.isRespectCooldown()), button -> {
+        })), "autoclicker-fabric.gui.help.spam-speed");
+        
+        this.buttonTooltips.put(this.addDrawableChild(
+            ButtonWidget.builder(
+                Language.GUI_RESPECT_COOLDOWN.getText(AutoClicker.leftHolding.isRespectCooldown()), (button) -> {
                     AutoClicker.leftHolding.setRespectCooldown(!AutoClicker.leftHolding.isRespectCooldown());
                     button.setMessage(Language.GUI_RESPECT_COOLDOWN.getText(AutoClicker.leftHolding.isRespectCooldown()));
                     AutoClicker.getInstance().saveConfig();
-                }, this::toolTip, "autoclicker-fabric.gui.help.cooldown"));
-
-        this.addDrawableChild(
-                new TooltipButton(x - 200, y + 44, 130, 20, Language.GUI_MOB_MODE.getText(AutoClicker.leftHolding.isMobMode()), button -> {
+            })
+            .dimensions(x - 200, y + 22, 130, 20)
+            .build()
+        ), "autoclicker-fabric.gui.help.cooldown");
+        
+        this.buttonTooltips.put(this.addDrawableChild(
+            ButtonWidget.builder(
+              Language.GUI_MOB_MODE.getText(AutoClicker.leftHolding.isMobMode()), (button) -> {
                     AutoClicker.leftHolding.setMobMode(!AutoClicker.leftHolding.isMobMode());
                     button.setMessage(Language.GUI_MOB_MODE.getText(AutoClicker.leftHolding.isMobMode()));
                     AutoClicker.getInstance().saveConfig();
-                }, this::toolTip, "autoclicker-fabric.gui.help.mob-mode"));
-    }
-
-    private void toolTip(ButtonWidget button, MatrixStack matrixStack, int i, int i1) {
-        this.renderHelpingTip(matrixStack, ((TooltipButton) button).tooltipCache);
+            })
+            .dimensions(x - 200, y + 44, 130, 20)
+            .build()
+        ), "autoclicker-fabric.gui.help.mob-mode");
     }
 
     private void renderHelpingTip(MatrixStack stack, Text text) {
@@ -123,9 +151,17 @@ public class OptionsScreen extends Screen {
 
         this.textRenderer.drawWithShadow(
                 matrices, Language.GUI_JUMP.getText(), this.width / 2f + 70, this.height / 2f - 56, 0xFFFFFF);
+        
+        for (ButtonWidget button : buttonTooltips.keySet()) {
+        	if (button.isHovered()) {
+        		this.renderHelpingTip(matrices, Text.translatable(this.buttonTooltips.get(button)));
+        	}
+        }
 
-        if (this.leftSpeedSlider.isMouseOver(mouseX, mouseY) || this.rightSpeedSlider.isMouseOver(mouseX, mouseY) || this.jumpSpeedSlider.isMouseOver(mouseX, mouseY)) {
-            this.renderHelpingTip(matrices, this.spammingHelpingText);
+        for (OptionsSliderWidget slider : sliderTooltips.keySet()) {
+        	if (slider.isHovered()) {
+        		this.renderHelpingTip(matrices, Text.translatable(this.sliderTooltips.get(slider)));
+        	}
         }
     }
 
