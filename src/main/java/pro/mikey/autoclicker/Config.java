@@ -37,8 +37,8 @@ public class Config {
         private boolean respectCooldown;
         private boolean mobMode;
 
-        public LeftMouseConfig(boolean active, boolean spamming, int cpt, boolean respectCooldown, boolean mobMode) {
-            super(active, spamming, cpt);
+        public LeftMouseConfig(boolean active, boolean onDelay, int cpt, boolean respectCooldown, boolean mobMode) {
+            super(active, onDelay, cpt);
 
             this.respectCooldown = respectCooldown;
             this.mobMode = mobMode;
@@ -62,25 +62,25 @@ public class Config {
     }
 
     public static class RightMouseConfig extends SharedConfig {
-        public RightMouseConfig(boolean active, boolean spamming, int cpt) {
-            super(active, spamming, cpt);
+        public RightMouseConfig(boolean active, boolean onDelay, int cpt) {
+            super(active, onDelay, cpt);
         }
     }
 
     public static class JumpConfig extends SharedConfig {
-        public JumpConfig(boolean active, boolean spamming, int cpt) {
-            super(active, spamming, cpt);
+        public JumpConfig(boolean active, boolean onDelay, int cpt) {
+            super(active, onDelay, cpt);
         }
     }
 
     public static class SharedConfig {
         private boolean active;
-        private boolean spamming;
+        private boolean onDelay;
         private int cpt;
 
-        public SharedConfig(boolean active, boolean spamming, int cpt) {
+        public SharedConfig(boolean active, boolean onDelay, int cpt) {
             this.active = active;
-            this.spamming = spamming;
+            this.onDelay = onDelay;
             this.cpt = cpt;
         }
 
@@ -92,12 +92,12 @@ public class Config {
             this.active = active;
         }
 
-        public boolean isSpamming() {
-            return this.spamming;
+        public boolean isOnDelay {
+            return this.onDelay;
         }
 
-        public void setSpamming(boolean spamming) {
-            this.spamming = spamming;
+        public void setonDelay(boolean onDelay) {
+            this.onDelay = onDelay;
         }
 
         public int getCpt() {
@@ -112,7 +112,7 @@ public class Config {
         public String toString() {
             return "SharedConfig{" +
                     "active=" + this.active +
-                    ", spamming=" + this.spamming +
+                    ", onDelay=" + this.onDelay +
                     ", cpt=" + this.cpt +
                     '}';
         }

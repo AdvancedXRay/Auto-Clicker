@@ -156,8 +156,8 @@ public class AutoClicker implements ModInitializer {
             return;
         }
 
-        if (key.isSpamming()) {
-            // How to handle the click if it's done by spamming
+        if (key.isOnDelay) {
+            // How to handle the click if it's done by onDelay
             if (key.getSpeed() > 0) {
                 if (key.getTimeout() <= 1) {
                     // Press the button twice by toggling 1 and 0
@@ -186,7 +186,7 @@ public class AutoClicker implements ModInitializer {
         // Normal holding or cool down behaviour
         // respect cool down
         if (key.isRespectCooldown()) {
-            // Don't do anything if they're not looking at somethign
+            // Don't do anything if they're not looking at something
             if (key instanceof Holding.AttackHolding && ((Holding.AttackHolding) key).isMobMode() && !this.isPlayerLookingAtMob(mc)) {
                 if (key.getKey().isPressed()) {
                     key.getKey().setPressed(false);

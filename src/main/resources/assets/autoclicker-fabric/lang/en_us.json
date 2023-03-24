@@ -8,15 +8,15 @@
   "autoclicker-fabric.msg.released-keys": "Released keys!",
   "autoclicker-fabric.gui.speed": "Speed: %f ticks",
   "autoclicker-fabric.gui.active": "Active: %s",
-  "autoclicker-fabric.gui.spamming": "Spamming: %s",
+  "autoclicker-fabric.gui.onDelay": "onDelay: %s",
   "autoclicker-fabric.gui.attack": "Attack (left click)",
   "autoclicker-fabric.gui.use": "Use (right click)",
   "autoclicker-fabric.gui.jump": "Use (jump)",
   "autoclicker-fabric.gui.respect": "Respect cooldown: %s",
   "autoclicker-fabric.gui.mob-mode": "Mob mode: %s",
   "autoclicker-fabric.gui.help.active": "If enabled, it will use the options below to determine how to auto click",
-  "autoclicker-fabric.gui.help.spamming": "When enabled, the key will be pressed then unpressed, you can control how quickly this happens below.",
+  "autoclicker-fabric.gui.help.onDelay": "When enabled, the key will be pressed then unpressed, you can control how quickly this happens below.",
   "autoclicker-fabric.gui.help.cooldown": "When enabled, if a mob is detected, the button will be tapped in respect to the cooldown of the attack.",
   "autoclicker-fabric.gui.help.mob-mode": "(Must have 'Respect Cooldown' enabled). When enabled, the button will only be clicked when a mob is in direct light of sight.",
-  "autoclicker-fabric.gui.help.spam-speed": "When 'spamming' is enabled, this setting will determine how many ticks are between each click, 0 = off, 1+ = 1 tick of delay."
+  "autoclicker-fabric.gui.help.spam-speed": "When 'onDelay' is enabled, this setting will determine how many ticks are between each click, 0 = off, 1+ = 1 tick of delay."
 }
