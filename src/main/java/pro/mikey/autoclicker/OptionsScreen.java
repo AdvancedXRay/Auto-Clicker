@@ -2,10 +2,14 @@ package pro.mikey.autoclicker;
 
 import java.util.HashMap;
 
+import java.util.List;
+import java.util.ListIterator;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.text.StringVisitable;
 
@@ -125,42 +129,48 @@ public class OptionsScreen extends Screen {
         ), "autoclicker-fabric.gui.help.mob-mode");
     }
 
-    private void renderHelpingTip(MatrixStack stack, Text text) {
+    private void renderHelpingTip(DrawContext drawContext, Text text) {
         int x = this.width / 2, y = this.height / 2;
-
-        this.renderOrderedTooltip(stack,
-                MinecraftClient.getInstance().textRenderer.wrapLines(StringVisitable.plain(text.getString()), 270),
+        ListIterator<OrderedText> l = this.textRenderer.wrapLines(StringVisitable.plain(text.getString()), 270).listIterator();
+        int line_pos = 0;
+        while (l.hasNext()) {
+            OrderedText e = l.next();
+            drawContext.drawText(this.textRenderer, e,
                 x - 140,
-                y + 100);
+                y + 100 + line_pos,
+                0xFFFFFF,
+                false);
+            line_pos += 10;
+        }
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.renderBackground(matrices);
-        super.render(matrices, mouseX, mouseY, delta);
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        this.renderBackground(drawContext);
+        super.render(drawContext, mouseX, mouseY, delta);
 
-        this.textRenderer.drawWithShadow(
-                matrices,
+        drawContext.drawTextWithShadow(
+                this.textRenderer,
                 Language.GUI_ATTACK.getText(),
-                this.width / 2f - 200,
-                this.height / 2f - 56,
+                this.width / 2 - 200,
+                this.height / 2 - 56,
                 0xFFFFFF);
 
-        this.textRenderer.drawWithShadow(
-                matrices, Language.GUI_USE.getText(), this.width / 2f - 65, this.height / 2f - 56, 0xFFFFFF);
+        drawContext.drawTextWithShadow(
+            this.textRenderer, Language.GUI_USE.getText(), this.width / 2 - 65, this.height / 2 - 56, 0xFFFFFF);
 
-        this.textRenderer.drawWithShadow(
-                matrices, Language.GUI_JUMP.getText(), this.width / 2f + 70, this.height / 2f - 56, 0xFFFFFF);
+        drawContext.drawTextWithShadow(
+            this.textRenderer, Language.GUI_JUMP.getText(), this.width / 2 + 70, this.height / 2 - 56, 0xFFFFFF);
         
         for (ButtonWidget button : buttonTooltips.keySet()) {
         	if (button.isHovered()) {
-        		this.renderHelpingTip(matrices, Text.translatable(this.buttonTooltips.get(button)));
+        		this.renderHelpingTip(drawContext, Text.translatable(this.buttonTooltips.get(button)));
         	}
         }
 
         for (OptionsSliderWidget slider : sliderTooltips.keySet()) {
         	if (slider.isHovered()) {
-        		this.renderHelpingTip(matrices, Text.translatable(this.sliderTooltips.get(slider)));
+        		this.renderHelpingTip(drawContext, Text.translatable(this.sliderTooltips.get(slider)));
         	}
         }
     }
