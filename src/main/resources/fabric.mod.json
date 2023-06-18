@@ -5,7 +5,8 @@
   "name": "Auto Clicker",
   "description": "Automatically left and right clicks for you, how kind!",
   "authors": [
-    "ErrorMikey (Michael Hillcox)"
+    "ErrorMikey",
+    "Advanced XRay team"
   ],
   "contact": {
     "homepage": "https://mikey.pro/",
@@ -20,9 +21,9 @@
     ]
   },
   "depends": {
-    "fabricloader": ">=0.14.11",
+    "fabricloader": ">=${fabricloader}",
     "fabric": "*",
-    "minecraft": ">=1.19.4 <1.20",
+    "minecraft": ">=${mc_version}",
     "java": ">=17"
   }
 }
