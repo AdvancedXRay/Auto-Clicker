@@ -3,7 +3,9 @@ package pro.mikey.autoclicker;
 import java.util.HashMap;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.tooltip.TooltipPositioner;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
@@ -20,7 +22,7 @@ public class OptionsScreen extends Screen {
     @Override
     protected void init() {
         int x = this.width / 2, y = this.height / 2;
-        
+
         this.buttonTooltips.put(this.addDrawableChild(
             ButtonWidget.builder(
                 Language.GUI_ACTIVE.getText(AutoClicker.leftHolding.isActive()), (button) -> {
@@ -31,7 +33,7 @@ public class OptionsScreen extends Screen {
             .dimensions(x - 200, y - 44, 130, 20)
             .build()
         ), "autoclicker-fabric.gui.help.active");
-        
+
         this.buttonTooltips.put(this.addDrawableChild(
             ButtonWidget.builder(
                 Language.GUI_ACTIVE.getText(AutoClicker.rightHolding.isActive()), (button) -> {
@@ -42,7 +44,7 @@ public class OptionsScreen extends Screen {
             .dimensions(x - 65, y - 44, 130, 20)
             .build()
         ), "autoclicker-fabric.gui.help.active");
-        
+
         this.buttonTooltips.put(this.addDrawableChild(
             ButtonWidget.builder(
                 Language.GUI_ACTIVE.getText(AutoClicker.jumpHolding.isActive()), (button) -> {
@@ -53,7 +55,7 @@ public class OptionsScreen extends Screen {
             .dimensions(x + 70 , y - 44, 130, 20)
             .build()
         ), "autoclicker-fabric.gui.help.active");
-        
+
         this.buttonTooltips.put(this.addDrawableChild(
             ButtonWidget.builder(
                 Language.GUI_SPAMMING.getText(AutoClicker.leftHolding.isSpamming()), (button) -> {
@@ -64,7 +66,7 @@ public class OptionsScreen extends Screen {
             .dimensions(x - 200, y - 22, 130, 20)
             .build()
         ), "autoclicker-fabric.gui.help.spamming");
-        
+
         this.buttonTooltips.put(this.addDrawableChild(
             ButtonWidget.builder(
                 Language.GUI_SPAMMING.getText(AutoClicker.rightHolding.isSpamming()), (button) -> {
@@ -75,7 +77,7 @@ public class OptionsScreen extends Screen {
             .dimensions(x - 65, y - 22, 130, 20)
             .build()
         ), "autoclicker-fabric.gui.help.spamming");
-        
+
         this.buttonTooltips.put(this.addDrawableChild(
             ButtonWidget.builder(
                 Language.GUI_SPAMMING.getText(AutoClicker.jumpHolding.isSpamming()), (button) -> {
@@ -86,22 +88,22 @@ public class OptionsScreen extends Screen {
             .dimensions(x + 70, y - 22, 130, 20)
             .build()
         ), "autoclicker-fabric.gui.help.spamming");
-        
+
         this.sliderTooltips.put(this.addDrawableChild(new OptionsSliderWidget(x - 200, y, 130, 20, Language.GUI_SPEED.getText(), AutoClicker.leftHolding.getSpeed() / 50f, value -> {
             AutoClicker.leftHolding.setSpeed(value);
             AutoClicker.getInstance().saveConfig();
         })), "autoclicker-fabric.gui.help.spam-speed");
-        
+
         this.sliderTooltips.put(this.addDrawableChild(new OptionsSliderWidget(x - 65, y, 130, 20, Language.GUI_SPEED.getText(), AutoClicker.rightHolding.getSpeed() / 50f, value -> {
             AutoClicker.rightHolding.setSpeed(value);
             AutoClicker.getInstance().saveConfig();
         })), "autoclicker-fabric.gui.help.spam-speed");
-        
+
         this.sliderTooltips.put(this.addDrawableChild(new OptionsSliderWidget(x + 70, y, 130, 20, Language.GUI_SPEED.getText(), AutoClicker.jumpHolding.getSpeed() / 50f, value -> {
             AutoClicker.jumpHolding.setSpeed(value);
             AutoClicker.getInstance().saveConfig();
         })), "autoclicker-fabric.gui.help.spam-speed");
-        
+
         this.buttonTooltips.put(this.addDrawableChild(
             ButtonWidget.builder(
                 Language.GUI_RESPECT_COOLDOWN.getText(AutoClicker.leftHolding.isRespectCooldown()), (button) -> {
@@ -112,7 +114,7 @@ public class OptionsScreen extends Screen {
             .dimensions(x - 200, y + 22, 130, 20)
             .build()
         ), "autoclicker-fabric.gui.help.cooldown");
-        
+
         this.buttonTooltips.put(this.addDrawableChild(
             ButtonWidget.builder(
               Language.GUI_MOB_MODE.getText(AutoClicker.leftHolding.isMobMode()), (button) -> {
@@ -125,42 +127,33 @@ public class OptionsScreen extends Screen {
         ), "autoclicker-fabric.gui.help.mob-mode");
     }
 
-    private void renderHelpingTip(MatrixStack stack, Text text) {
+    private void renderHelpingTip(DrawContext drawContext, Text text) {
         int x = this.width / 2, y = this.height / 2;
 
-        this.renderOrderedTooltip(stack,
+        drawContext.drawOrderedTooltip(this.textRenderer,
                 MinecraftClient.getInstance().textRenderer.wrapLines(StringVisitable.plain(text.getString()), 270),
                 x - 140,
                 y + 100);
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.renderBackground(matrices);
-        super.render(matrices, mouseX, mouseY, delta);
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        this.renderBackground(drawContext);
+        super.render(drawContext, mouseX, mouseY, delta);
 
-        this.textRenderer.drawWithShadow(
-                matrices,
-                Language.GUI_ATTACK.getText(),
-                this.width / 2f - 200,
-                this.height / 2f - 56,
-                0xFFFFFF);
+        drawContext.drawTextWithShadow(this.textRenderer, Language.GUI_ATTACK.getText(), this.width / 2 - 200, this.height / 2 - 56, 0xFFFFFF);
+        drawContext.drawTextWithShadow(this.textRenderer, Language.GUI_USE.getText(), this.width / 2 - 65, this.height / 2 - 56, 0xFFFFFF);
+        drawContext.drawTextWithShadow(this.textRenderer, Language.GUI_JUMP.getText(), this.width / 2 + 70, this.height / 2 - 56, 0xFFFFFF);
 
-        this.textRenderer.drawWithShadow(
-                matrices, Language.GUI_USE.getText(), this.width / 2f - 65, this.height / 2f - 56, 0xFFFFFF);
-
-        this.textRenderer.drawWithShadow(
-                matrices, Language.GUI_JUMP.getText(), this.width / 2f + 70, this.height / 2f - 56, 0xFFFFFF);
-        
         for (ButtonWidget button : buttonTooltips.keySet()) {
         	if (button.isHovered()) {
-        		this.renderHelpingTip(matrices, Text.translatable(this.buttonTooltips.get(button)));
+        		this.renderHelpingTip(drawContext, Text.translatable(this.buttonTooltips.get(button)));
         	}
         }
 
         for (OptionsSliderWidget slider : sliderTooltips.keySet()) {
         	if (slider.isHovered()) {
-        		this.renderHelpingTip(matrices, Text.translatable(this.sliderTooltips.get(slider)));
+        		this.renderHelpingTip(drawContext, Text.translatable(this.sliderTooltips.get(slider)));
         	}
         }
     }

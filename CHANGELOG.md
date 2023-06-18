@@ -1,5 +1,5 @@
-## [1.6.0]
+## [1.7.0]
 
 ### Changed
 
-- Ported to 1.19.4
+- Ported to 1.20
