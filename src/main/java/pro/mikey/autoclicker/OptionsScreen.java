@@ -56,48 +56,48 @@ public class OptionsScreen extends Screen {
         
         this.buttonTooltips.put(this.addDrawableChild(
             ButtonWidget.builder(
-                Language.GUI_SPAMMING.getText(AutoClicker.leftHolding.isSpamming()), (button) -> {
-                    AutoClicker.leftHolding.setSpamming(!AutoClicker.leftHolding.isSpamming());
-                    button.setMessage(Language.GUI_SPAMMING.getText(AutoClicker.leftHolding.isSpamming()));
+                Language.GUI_onDelay.getText(AutoClicker.leftHolding.isOnDelay), (button) -> {
+                    AutoClicker.leftHolding.setonDelay(!AutoClicker.leftHolding.isOnDelay);
+                    button.setMessage(Language.GUI_onDelay.getText(AutoClicker.leftHolding.isOnDelay));
                     AutoClicker.getInstance().saveConfig();
             })
             .dimensions(x - 200, y - 22, 130, 20)
             .build()
-        ), "autoclicker-fabric.gui.help.spamming");
+        ), "autoclicker-fabric.gui.help.onDelay");
         
         this.buttonTooltips.put(this.addDrawableChild(
             ButtonWidget.builder(
-                Language.GUI_SPAMMING.getText(AutoClicker.rightHolding.isSpamming()), (button) -> {
-                    AutoClicker.rightHolding.setSpamming(!AutoClicker.rightHolding.isSpamming());
-                    button.setMessage(Language.GUI_SPAMMING.getText(AutoClicker.rightHolding.isSpamming()));
+                Language.GUI_onDelay.getText(AutoClicker.rightHolding.isOnDelay), (button) -> {
+                    AutoClicker.rightHolding.setonDelay(!AutoClicker.rightHolding.isOnDelay);
+                    button.setMessage(Language.GUI_onDelay.getText(AutoClicker.rightHolding.isOnDelay));
                     AutoClicker.getInstance().saveConfig();
             })
             .dimensions(x - 65, y - 22, 130, 20)
             .build()
-        ), "autoclicker-fabric.gui.help.spamming");
+        ), "autoclicker-fabric.gui.help.onDelay");
         
         this.buttonTooltips.put(this.addDrawableChild(
             ButtonWidget.builder(
-                Language.GUI_SPAMMING.getText(AutoClicker.jumpHolding.isSpamming()), (button) -> {
-                    AutoClicker.jumpHolding.setSpamming(!AutoClicker.jumpHolding.isSpamming());
-                    button.setMessage(Language.GUI_SPAMMING.getText(AutoClicker.jumpHolding.isSpamming()));
+                Language.GUI_onDelay.getText(AutoClicker.jumpHolding.isOnDelay), (button) -> {
+                    AutoClicker.jumpHolding.setonDelay(!AutoClicker.jumpHolding.isOnDelay);
+                    button.setMessage(Language.GUI_onDelay.getText(AutoClicker.jumpHolding.isOnDelay));
                     AutoClicker.getInstance().saveConfig();
             })
             .dimensions(x + 70, y - 22, 130, 20)
             .build()
-        ), "autoclicker-fabric.gui.help.spamming");
-        
-        this.sliderTooltips.put(this.addDrawableChild(new OptionsSliderWidget(x - 200, y, 130, 20, Language.GUI_SPEED.getText(), AutoClicker.leftHolding.getSpeed() / 50f, value -> {
+        ), "autoclicker-fabric.gui.help.onDelay");
+        // 1000f represents the sliders maximum value
+        this.sliderTooltips.put(this.addDrawableChild(new OptionsSliderWidget(x - 200, y, 130, 20, Language.GUI_SPEED.getText(), AutoClicker.leftHolding.getSpeed() / 1000f, value -> {
             AutoClicker.leftHolding.setSpeed(value);
             AutoClicker.getInstance().saveConfig();
         })), "autoclicker-fabric.gui.help.spam-speed");
         
-        this.sliderTooltips.put(this.addDrawableChild(new OptionsSliderWidget(x - 65, y, 130, 20, Language.GUI_SPEED.getText(), AutoClicker.rightHolding.getSpeed() / 50f, value -> {
+        this.sliderTooltips.put(this.addDrawableChild(new OptionsSliderWidget(x - 65, y, 130, 20, Language.GUI_SPEED.getText(), AutoClicker.rightHolding.getSpeed() / 1000f, value -> {
             AutoClicker.rightHolding.setSpeed(value);
             AutoClicker.getInstance().saveConfig();
         })), "autoclicker-fabric.gui.help.spam-speed");
         
-        this.sliderTooltips.put(this.addDrawableChild(new OptionsSliderWidget(x + 70, y, 130, 20, Language.GUI_SPEED.getText(), AutoClicker.jumpHolding.getSpeed() / 50f, value -> {
+        this.sliderTooltips.put(this.addDrawableChild(new OptionsSliderWidget(x + 70, y, 130, 20, Language.GUI_SPEED.getText(), AutoClicker.jumpHolding.getSpeed() / 1000f, value -> {
             AutoClicker.jumpHolding.setSpeed(value);
             AutoClicker.getInstance().saveConfig();
         })), "autoclicker-fabric.gui.help.spam-speed");

@@ -9,7 +9,7 @@ public enum Language {
     MSG_RELEASED_KEYS("autoclicker-fabric.msg.released-keys"),
     GUI_SPEED("autoclicker-fabric.gui.speed"),
     GUI_ACTIVE("autoclicker-fabric.gui.active"),
-    GUI_SPAMMING("autoclicker-fabric.gui.spamming"),
+    GUI_onDelay("autoclicker-fabric.gui.onDelay"),
     GUI_ATTACK("autoclicker-fabric.gui.attack"),
     GUI_USE("autoclicker-fabric.gui.use"),
     GUI_JUMP("autoclicker-fabric.gui.jump"),

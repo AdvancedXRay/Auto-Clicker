@@ -37,12 +37,12 @@ public class Holding {
         this.config.setActive(active);
     }
 
-    public boolean isSpamming() {
-        return this.config.isSpamming();
+    public boolean isOnDelay {
+        return this.config.isOnDelay;
     }
 
-    public void setSpamming(boolean spamming) {
-        this.config.setSpamming(spamming);
+    public void setonDelay(boolean onDelay) {
+        this.config.setonDelay(onDelay);
     }
 
     public int getSpeed() {

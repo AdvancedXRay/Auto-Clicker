@@ -13,14 +13,14 @@ public class OptionsSliderWidget extends SliderWidget {
         this.onUpdate = onUpdate;
         this.updateMessage();
     }
-
+// the number 1000 is used to multiply the sliders value which is usually a double in range of 0 to 1 to display 1000 ticks
     @Override
     protected void updateMessage() {
-        this.setMessage(Language.GUI_SPEED.getText((int) Math.round(this.value * 50)));
+        this.setMessage(Language.GUI_SPEED.getText((int) Math.round(this.value * 1000)));
     }
 
     @Override
     protected void applyValue() {
-        this.onUpdate.accept((int) Math.round(this.value * 50));
+        this.onUpdate.accept((int) Math.round(this.value * 1000));
     }
 }
