@@ -8,10 +8,11 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -107,24 +108,29 @@ public class AutoClicker implements ModInitializer {
         }
     }
 
-    private void RenderGameOverlayEvent(MatrixStack matrixStack, float delta) {
+    private void RenderGameOverlayEvent(DrawContext context, float delta) {
         if ((!leftHolding.isActive() && !rightHolding.isActive() && !jumpHolding.isActive()) || !this.isActive) {
             return;
         }
 
+        MinecraftClient client = MinecraftClient.getInstance();
+        
         int y = 10;
         if (leftHolding.isActive()) {
-            MinecraftClient.getInstance().textRenderer.drawWithShadow(matrixStack, Language.HUD_HOLDING.getText(I18n.translate(leftHolding.getKey().getTranslationKey())), 10, y, 0xffffff);
+            Text text = Language.HUD_HOLDING.getText(I18n.translate(leftHolding.getKey().getTranslationKey()));
+            context.drawTextWithShadow(client.textRenderer, text.asOrderedText(), 10, y, 0xffffff);
             y += 15;
         }
 
         if (rightHolding.isActive()) {
-            MinecraftClient.getInstance().textRenderer.drawWithShadow(matrixStack, Language.HUD_HOLDING.getText(I18n.translate(rightHolding.getKey().getTranslationKey())), 10, y, 0xffffff);
+            Text text = Language.HUD_HOLDING.getText(I18n.translate(rightHolding.getKey().getTranslationKey()));
+            context.drawTextWithShadow(client.textRenderer, text.asOrderedText(), 10, y, 0xffffff);
             y += 15;
         }
 
         if (jumpHolding.isActive()) {
-            MinecraftClient.getInstance().textRenderer.drawWithShadow(matrixStack, Language.HUD_HOLDING.getText(I18n.translate(jumpHolding.getKey().getTranslationKey())), 10, y, 0xffffff);
+            Text text = Language.HUD_HOLDING.getText(I18n.translate(jumpHolding.getKey().getTranslationKey()));
+            context.drawTextWithShadow(client.textRenderer, text.asOrderedText(), 10, y, 0xffffff);
         }
     }
 
