@@ -90,7 +90,7 @@ publishMods {
     file = remapJar.archiveFile
 
     curseforge {
-        displayName = "Advanced XRay Fabric ${mod_version}"
+        displayName = "Auto Clicker Fabric ${mod_version}"
         modLoaders.add("fabric")
         accessToken = curseToken
         projectId = project.curseforge_id
@@ -101,7 +101,7 @@ publishMods {
     }
 
     modrinth {
-        displayName = "Advanced XRay Fabric ${mod_version}"
+        displayName = "Auto Clicker Fabric ${mod_version}"
         modLoaders.add("fabric")
         accessToken = providers.environmentVariable("MODRINTH_TOKEN")
         projectId = project.modrinth_id
@@ -112,7 +112,7 @@ publishMods {
     }
 
     github {
-        repository = "AdvancedXRay/XRay-Fabric"
+        repository = "AdvancedXRay/Auto-Clicker-Fabric"
         accessToken = providers.environmentVariable("GITHUB_TOKEN")
         commitish = providers.environmentVariable("GITHUB_SHA").orElse("main")
         tagName = providers.environmentVariable("GITHUB_REF_NAME").orElse("v${mod_version}")
