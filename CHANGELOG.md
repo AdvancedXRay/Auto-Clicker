@@ -1,3 +1,9 @@
+## [83.0.0]
+
+### Changed
+
+- Updated to 1.20.3
+
 ## [1.8.0]
 
 ### Changed

@@ -1,7 +1,8 @@
 plugins {
-    id 'fabric-loom' version '1.2-SNAPSHOT'
+    id 'fabric-loom' version '1.4-SNAPSHOT'
     id 'maven-publish'
-    id "com.matthewprenger.cursegradle" version "1.4.0"
+    id 'pro.mikey.plugins.insaniam' version "0.1-SNAPSHOT"
+    id "me.modmuss50.mod-publish-plugin" version "0.4.5"
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -10,7 +11,7 @@ targetCompatibility = JavaVersion.VERSION_17
 def ENV = System.getenv()
 
 archivesBaseName = project.archives_base_name
-version = "${project.minecraft_version}-${project.mod_version}-build.${ENV.GITHUB_RUN_NUMBER ?: 9999}"
+version = project.mod_version
 group = project.maven_group
 
 dependencies {
@@ -72,17 +73,48 @@ publishing {
     }
 }
 
-if (ENV.CURSE_DEPLOY_TOKEN) {
+def changelogData = insaniamUtils.createChangelog {
+    file = file('CHANGELOG.md')
+    versionPattern = ~/## \[[^]]+]/
+    fallbackValue = "No changelog provided"
+    version = project.mod_version
+}
+
+publishMods {
+    def curseToken = providers.environmentVariable("CURSE_DEPLOY_TOKEN")
+
+    dryRun = !curseToken.isPresent()
+    changelog = changelogData
+    version = project.mod_version
+    type = STABLE
+    file = remapJar.archiveFile
+
     curseforge {
-        apiKey = ENV.CURSE_DEPLOY_TOKEN
-        project {
-            id = project.curseforge_id
-            releaseType = "release"
-            addGameVersion "Fabric"
-            addGameVersion "$minecraft_version"
-            changelog = file("./CHANGELOG.md")
-            changelogType = 'markdown'
-            mainArtifact(remapJar)
+        displayName = "Advanced XRay Fabric ${mod_version}"
+        modLoaders.add("fabric")
+        accessToken = curseToken
+        projectId = project.curseforge_id
+        minecraftVersions.add("${minecraft_version}")
+        requires {
+            slug = "fabric-api"
         }
+    }
+
+    modrinth {
+        displayName = "Advanced XRay Fabric ${mod_version}"
+        modLoaders.add("fabric")
+        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+        projectId = project.modrinth_id
+        minecraftVersions.add("${minecraft_version}")
+        requires {
+            slug = "fabric-api"
+        }
+    }
+
+    github {
+        repository = "AdvancedXRay/XRay-Fabric"
+        accessToken = providers.environmentVariable("GITHUB_TOKEN")
+        commitish = providers.environmentVariable("GITHUB_SHA").orElse("main")
+        tagName = providers.environmentVariable("GITHUB_REF_NAME").orElse("v${mod_version}")
     }
 }
