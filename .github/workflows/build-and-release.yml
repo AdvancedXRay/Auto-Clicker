@@ -26,6 +26,7 @@ jobs:
           CURSE_DEPLOY_TOKEN: ${{ secrets.CURSE_DEPLOY_TOKEN }}
           SAPS_TOKEN: ${{ secrets.SAPS_TOKEN }}
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           chmod +x ./gradlew
           ./gradlew clean build publish publishMods --stacktrace --no-daemon
