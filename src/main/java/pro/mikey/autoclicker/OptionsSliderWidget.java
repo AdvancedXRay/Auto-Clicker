@@ -7,16 +7,18 @@ import java.util.function.Consumer;
 
 public class OptionsSliderWidget extends SliderWidget {
     public Consumer<Integer> onUpdate;
+    private final Language baseText;
 
-    public OptionsSliderWidget(int x, int y, int width, int height, Text text, double value, Consumer<Integer> onUpdate) {
-        super(x, y, width, height, text, value);
+    public OptionsSliderWidget(int x, int y, int width, int height, Language text, double value, Consumer<Integer> onUpdate) {
+        super(x, y, width, height, text.getText(), value);
+        this.baseText = text;
         this.onUpdate = onUpdate;
         this.updateMessage();
     }
 
     @Override
     protected void updateMessage() {
-        this.setMessage(Language.GUI_SPEED.getText((int) Math.round(this.value * 50)));
+        this.setMessage(baseText.getText((int) Math.round(this.value * 50)));
     }
 
     @Override

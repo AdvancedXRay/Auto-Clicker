@@ -6,6 +6,8 @@
   "autoclicker-fabric.hud.holding": "Holding %s",
   "autoclicker-fabric.msg.holding-keys": "Holding keys!",
   "autoclicker-fabric.msg.released-keys": "Released keys!",
+  "autoclicker-fabric.gui.maxspeed": "Max Speed: %f ticks",
+  "autoclicker-fabric.gui.minspeed": "Min Speed: %f ticks",
   "autoclicker-fabric.gui.speed": "Speed: %f ticks",
   "autoclicker-fabric.gui.active": "Active: %s",
   "autoclicker-fabric.gui.spamming": "Spamming: %s",

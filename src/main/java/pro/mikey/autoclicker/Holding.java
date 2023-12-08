@@ -2,15 +2,20 @@ package pro.mikey.autoclicker;
 
 import net.minecraft.client.option.KeyBinding;
 
+import java.security.PublicKey;
+import java.util.Random;
+
 public class Holding {
     private final KeyBinding key;
     Config.SharedConfig config;
     private int timeout;
 
+    public static final Random rng = new Random();
+
     public Holding(KeyBinding key, Config.SharedConfig config) {
         this.config = config;
         this.key = key;
-        this.timeout = config.getCpt();
+        this.timeout = createRandomTimeout();
     }
 
     public boolean isRespectCooldown() {
@@ -45,20 +50,32 @@ public class Holding {
         this.config.setSpamming(spamming);
     }
 
-    public int getSpeed() {
-        return this.config.getCpt();
+    public int getMinSpeed(){
+        return this.config.getMincpt();
     }
 
-    public void setSpeed(int speed) {
-        this.config.setCpt(speed);
+    public int getMaxSpeed(){
+        return this.config.getMaxcpt();
     }
+
+    public void setMinSpeed(int speed) {
+        this.config.setMincpt(speed);
+    }
+    public void setMaxSpeed(int speed) {
+        this.config.setMaxcpt(speed);
+    }
+
 
     public int getTimeout() {
         return this.timeout;
     }
 
     public void resetTimeout() {
-        this.timeout = this.config.getCpt();
+        this.timeout =  createRandomTimeout();
+    }
+
+    public int createRandomTimeout() {
+        return this.config.getMincpt() + (int)((float)this.config.getMaxcpt()*rng.nextFloat());
     }
 
     public void decreaseTimeout() {

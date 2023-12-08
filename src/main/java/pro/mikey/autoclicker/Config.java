@@ -37,8 +37,8 @@ public class Config {
         private boolean respectCooldown;
         private boolean mobMode;
 
-        public LeftMouseConfig(boolean active, boolean spamming, int cpt, boolean respectCooldown, boolean mobMode) {
-            super(active, spamming, cpt);
+        public LeftMouseConfig(boolean active, boolean spamming, int mincpt, int maxcpt, boolean respectCooldown, boolean mobMode) {
+            super(active, spamming, mincpt, maxcpt);
 
             this.respectCooldown = respectCooldown;
             this.mobMode = mobMode;
@@ -62,26 +62,28 @@ public class Config {
     }
 
     public static class RightMouseConfig extends SharedConfig {
-        public RightMouseConfig(boolean active, boolean spamming, int cpt) {
-            super(active, spamming, cpt);
+        public RightMouseConfig(boolean active, boolean spamming, int mincpt, int maxcpt) {
+            super(active, spamming, mincpt, maxcpt);
         }
     }
 
     public static class JumpConfig extends SharedConfig {
-        public JumpConfig(boolean active, boolean spamming, int cpt) {
-            super(active, spamming, cpt);
+        public JumpConfig(boolean active, boolean spamming, int mincpt, int maxcpt) {
+            super(active, spamming, mincpt, maxcpt);
         }
     }
 
     public static class SharedConfig {
         private boolean active;
         private boolean spamming;
-        private int cpt;
+        private int mincpt;
+        private int maxcpt;
 
-        public SharedConfig(boolean active, boolean spamming, int cpt) {
+        public SharedConfig(boolean active, boolean spamming, int mincpt,int maxcpt) {
             this.active = active;
             this.spamming = spamming;
-            this.cpt = cpt;
+            this.mincpt = mincpt;
+            this.maxcpt = maxcpt;
         }
 
         public boolean isActive() {
@@ -100,12 +102,20 @@ public class Config {
             this.spamming = spamming;
         }
 
-        public int getCpt() {
-            return this.cpt;
+        public int getMaxcpt() {
+            return maxcpt;
         }
 
-        public void setCpt(int cpt) {
-            this.cpt = cpt;
+        public void setMaxcpt(int maxcpt) {
+            this.maxcpt = maxcpt;
+        }
+
+        public int getMincpt() {
+            return mincpt;
+        }
+
+        public void setMincpt(int mincpt) {
+            this.mincpt = mincpt;
         }
 
         @Override
@@ -113,7 +123,8 @@ public class Config {
             return "SharedConfig{" +
                     "active=" + this.active +
                     ", spamming=" + this.spamming +
-                    ", cpt=" + this.cpt +
+                    ", maxcpt=" + this.maxcpt +
+                    ", mincpt=" + this.mincpt +
                     '}';
         }
     }

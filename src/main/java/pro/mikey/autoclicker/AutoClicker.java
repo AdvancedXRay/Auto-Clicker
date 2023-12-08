@@ -42,9 +42,9 @@ public class AutoClicker implements ModInitializer {
     private static AutoClicker INSTANCE;
     private boolean isActive = false;
     private Config config = new Config(
-            new Config.LeftMouseConfig(false, false, 0, false, false),
-            new Config.RightMouseConfig(false, false, 0),
-            new Config.JumpConfig(false, false, 0)
+            new Config.LeftMouseConfig(false, false, 0,0, false, false),
+            new Config.RightMouseConfig(false, false, 0,0),
+            new Config.JumpConfig(false, false, 0,0)
     );
     
     public AutoClicker() {
@@ -164,7 +164,7 @@ public class AutoClicker implements ModInitializer {
 
         if (key.isSpamming()) {
             // How to handle the click if it's done by spamming
-            if (key.getSpeed() > 0) {
+            if (key.getMinSpeed() > 0) {
                 if (key.getTimeout() <= 1) {
                     // Press the button twice by toggling 1 and 0
                     key.getKey().setPressed(key.getTimeout() == 1);
