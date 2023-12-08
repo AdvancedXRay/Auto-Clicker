@@ -75,7 +75,7 @@ public class Holding {
     }
 
     public int createRandomTimeout() {
-        return this.config.getMincpt() + (int)((float)this.config.getMaxcpt()*rng.nextFloat());
+        return this.config.getMincpt() + (int)((float)(this.config.getMaxcpt()-this.config.getMincpt())*rng.nextFloat());
     }
 
     public void decreaseTimeout() {
