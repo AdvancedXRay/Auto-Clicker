@@ -1,3 +1,9 @@
+## [84.0.1]
+
+### Fixed
+
+- Actually trigger the arm swing animation
+
 ## [84.0.0]
 
 ### Changed
