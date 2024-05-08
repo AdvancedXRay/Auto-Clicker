@@ -1,10 +1,14 @@
-## [85.0.0]
+## [86.0.0]
 
 ### Changed
 
 - Updated to 1.20.6
 
-1.20.5 made Java 21 required, updated Gradle to 8.7.
+## [84.0.1]
+
+### Fixed
+
+- Actually trigger the arm swing animation
 
 ## [84.0.0]
 
