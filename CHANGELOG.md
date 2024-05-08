@@ -1,8 +1,20 @@
-## [1.6.0]
+## [84.0.0]
 
 ### Changed
 
-- Ported to 1.19.4
+- Updated to 1.20.4
+
+## [83.0.0]
+
+### Changed
+
+- Updated to 1.20.3
+
+## [1.8.0]
+
+### Changed
+
+- Ported to 1.20.1
 
 ## [1.7.0]
 
