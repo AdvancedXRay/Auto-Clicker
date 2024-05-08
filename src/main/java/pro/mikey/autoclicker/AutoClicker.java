@@ -14,6 +14,7 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Hand;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import org.apache.logging.log4j.LogManager;
@@ -46,7 +47,7 @@ public class AutoClicker implements ModInitializer {
             new Config.RightMouseConfig(false, false, 0),
             new Config.JumpConfig(false, false, 0)
     );
-    
+
     public AutoClicker() {
         INSTANCE = this;
     }
@@ -99,7 +100,7 @@ public class AutoClicker implements ModInitializer {
     public void saveConfig() {
         try {
             FileWriter writer = new FileWriter(CONFIG_FILE.toFile());
-            
+
             new Gson().toJson(this.config, writer);
             writer.flush();
             writer.close();
@@ -221,6 +222,9 @@ public class AutoClicker implements ModInitializer {
         HitResult rayTrace = mc.crosshairTarget;
         if (rayTrace instanceof EntityHitResult && mc.interactionManager != null) {
             mc.interactionManager.attackEntity(mc.player, ((EntityHitResult) rayTrace).getEntity());
+            if (mc.player != null) {
+                mc.player.swingHand(Hand.MAIN_HAND);
+            }
         }
     }
 

@@ -17,19 +17,16 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: 'gradle'
-      - name: Build with Gradle
-        env:
-          SAPS_TOKEN: ${{ secrets.SAPS_TOKEN }}
-        run: |
-          chmod +x ./gradlew
-          ./gradlew build publish --stacktrace --no-daemon
-      - name: Release to CurseForge
+      - name: Release
         if: |
           !contains(github.event.head_commit.message, '[norelease]')
         env:
           GIT_COMMIT: ${{ github.event.after }}
           GIT_PREVIOUS_COMMIT: ${{ github.event.before }}
           CURSE_DEPLOY_TOKEN: ${{ secrets.CURSE_DEPLOY_TOKEN }}
+          SAPS_TOKEN: ${{ secrets.SAPS_TOKEN }}
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           chmod +x ./gradlew
-          ./gradlew curseforge --stacktrace --no-daemon
+          ./gradlew clean build publish publishMods --stacktrace --no-daemon
