@@ -1,3 +1,11 @@
+## [85.0.0]
+
+### Changed
+
+- Updated to 1.20.6
+
+1.20.5 made Java 21 required, updated Gradle to 8.7.
+
 ## [84.0.0]
 
 ### Changed
