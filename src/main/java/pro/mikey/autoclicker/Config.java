@@ -35,9 +35,10 @@ public class Config {
 
     public static class LeftMouseConfig extends SharedConfig {
         private boolean respectCooldown;
+        private boolean respectShield;
         private boolean mobMode;
 
-        public LeftMouseConfig(boolean active, boolean spamming, int cpt, boolean respectCooldown, boolean mobMode) {
+        public LeftMouseConfig(boolean active, boolean spamming, int cpt, boolean respectCooldown, boolean respectShield, boolean mobMode) {
             super(active, spamming, cpt);
 
             this.respectCooldown = respectCooldown;
@@ -50,6 +51,14 @@ public class Config {
 
         public void setRespectCooldown(boolean respectCooldown) {
             this.respectCooldown = respectCooldown;
+        }
+
+        public boolean isRespectShield() {
+            return this.respectShield;
+        }
+
+        public void setRespectShield(boolean respectShield) {
+            this.respectShield = respectShield;
         }
 
         public boolean isMobMode() {

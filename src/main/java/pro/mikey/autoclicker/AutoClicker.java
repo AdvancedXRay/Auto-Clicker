@@ -1,5 +1,6 @@
 package pro.mikey.autoclicker;
 
+import ca.weblite.objc.Client;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import net.fabricmc.api.ModInitializer;
@@ -9,9 +10,12 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ShieldItem;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -43,7 +47,7 @@ public class AutoClicker implements ModInitializer {
     private static AutoClicker INSTANCE;
     private boolean isActive = false;
     private Config config = new Config(
-            new Config.LeftMouseConfig(false, false, 0, false, false),
+            new Config.LeftMouseConfig(false, false, 0, false, false, false),
             new Config.RightMouseConfig(false, false, 0),
             new Config.JumpConfig(false, false, 0)
     );
@@ -221,11 +225,20 @@ public class AutoClicker implements ModInitializer {
 
         HitResult rayTrace = mc.crosshairTarget;
         if (rayTrace instanceof EntityHitResult && mc.interactionManager != null) {
-            mc.interactionManager.attackEntity(mc.player, ((EntityHitResult) rayTrace).getEntity());
-            if (mc.player != null) {
-                mc.player.swingHand(Hand.MAIN_HAND);
+            if(!(config.getLeftClick().isRespectShield() && isShielding(mc.player))) {
+                mc.interactionManager.attackEntity(mc.player, ((EntityHitResult) rayTrace).getEntity());
+                if (mc.player != null) {
+                    mc.player.swingHand(Hand.MAIN_HAND);
+                }
             }
         }
+    }
+
+    private boolean isShielding(ClientPlayerEntity player) {
+        if (player.isUsingItem()) {
+            return player.getActiveItem().getItem() instanceof ShieldItem;
+        }
+        return false;
     }
 
     private boolean isPlayerLookingAtMob(MinecraftClient mc) {
