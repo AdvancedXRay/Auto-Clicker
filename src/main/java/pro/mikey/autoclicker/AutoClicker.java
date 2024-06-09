@@ -1,6 +1,5 @@
 package pro.mikey.autoclicker;
 
-import ca.weblite.objc.Client;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import net.fabricmc.api.ModInitializer;
@@ -14,7 +13,6 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ShieldItem;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
