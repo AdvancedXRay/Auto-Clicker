@@ -11,6 +11,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ShieldItem;
@@ -111,13 +112,13 @@ public class AutoClicker implements ModInitializer {
         }
     }
 
-    private void RenderGameOverlayEvent(DrawContext context, float delta) {
+    private void RenderGameOverlayEvent(DrawContext context, RenderTickCounter delta) {
         if ((!leftHolding.isActive() && !rightHolding.isActive() && !jumpHolding.isActive()) || !this.isActive) {
             return;
         }
 
         MinecraftClient client = MinecraftClient.getInstance();
-        
+
         int y = 10;
         if (leftHolding.isActive()) {
             Text text = Language.HUD_HOLDING.getText(I18n.translate(leftHolding.getKey().getTranslationKey()));
