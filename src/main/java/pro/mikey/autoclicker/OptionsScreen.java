@@ -154,7 +154,7 @@ public class OptionsScreen extends Screen {
 
         context.drawTextWithShadow(
             this.textRenderer, Language.GUI_JUMP.getText().asOrderedText(), this.width / 2 + 70, this.height / 2 - 56, 0xFFFFFF);
-        
+
         for (ButtonWidget button : buttonTooltips.keySet()) {
         	if (button.isHovered()) {
         		this.renderHelpingTip(context, Text.translatable(this.buttonTooltips.get(button)), mouseX, mouseY);
@@ -176,5 +176,10 @@ public class OptionsScreen extends Screen {
         }
 
         return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    public boolean shouldPause() {
+        return false;
     }
 }

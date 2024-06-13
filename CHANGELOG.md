@@ -1,3 +1,13 @@
+## [20.6.1]
+
+### Added
+
+- Added a new config option to respect your shield being held and active (Thanks to [#53](https://github.com/AdvancedXRay/Auto-Clicker/pull/53) [@AdyTech99](https://github.com/AdyTech99))
+
+### Changed
+
+- Messed with the version number, we're now using Neoforges versioning system
+
 ## [86.0.0]
 
 ### Changed
