@@ -14,6 +14,7 @@ public enum Language {
     GUI_USE("autoclicker-fabric.gui.use"),
     GUI_JUMP("autoclicker-fabric.gui.jump"),
     GUI_RESPECT_COOLDOWN("autoclicker-fabric.gui.respect"),
+    GUI_RESPECT_SHIELD("autoclicker-fabric.gui.shield"),
     GUI_MOB_MODE("autoclicker-fabric.gui.mob-mode");
 
     private final String key;

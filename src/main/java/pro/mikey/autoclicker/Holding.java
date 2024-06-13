@@ -25,6 +25,18 @@ public class Holding {
         ((Config.LeftMouseConfig) this.config).setRespectCooldown(respectCooldown);
     }
 
+    public boolean isRespectShield() {
+        return this.config instanceof Config.LeftMouseConfig && ((Config.LeftMouseConfig) this.config).isRespectShield();
+    }
+
+    public void setRespectShield(boolean respectShield) {
+        if (!(this.config instanceof Config.LeftMouseConfig)) {
+            return;
+        }
+
+        ((Config.LeftMouseConfig) this.config).setRespectShield(respectShield);
+    }
+
     public KeyBinding getKey() {
         return this.key;
     }

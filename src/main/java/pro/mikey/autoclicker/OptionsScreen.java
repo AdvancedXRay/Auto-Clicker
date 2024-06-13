@@ -1,14 +1,13 @@
 package pro.mikey.autoclicker;
 
-import java.util.HashMap;
-
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.tooltip.TooltipPositioner;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.HoveredTooltipPositioner;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.StringVisitable;
+import net.minecraft.text.Text;
+
+import java.util.HashMap;
 
 public class OptionsScreen extends Screen {
     private final HashMap<ButtonWidget, String> buttonTooltips = new HashMap<>();
@@ -115,13 +114,24 @@ public class OptionsScreen extends Screen {
         ), "autoclicker-fabric.gui.help.cooldown");
 
         this.buttonTooltips.put(this.addDrawableChild(
+                ButtonWidget.builder(
+                                Language.GUI_RESPECT_SHIELD.getText(AutoClicker.leftHolding.isRespectShield()), (button) -> {
+                                    AutoClicker.leftHolding.setRespectShield(!AutoClicker.leftHolding.isRespectShield());
+                                    button.setMessage(Language.GUI_RESPECT_SHIELD.getText(AutoClicker.leftHolding.isRespectShield()));
+                                    AutoClicker.getInstance().saveConfig();
+                                })
+                        .dimensions(x - 200, y + 44, 130, 20)
+                        .build()
+        ), "autoclicker-fabric.gui.help.shield");
+
+        this.buttonTooltips.put(this.addDrawableChild(
             ButtonWidget.builder(
               Language.GUI_MOB_MODE.getText(AutoClicker.leftHolding.isMobMode()), (button) -> {
                     AutoClicker.leftHolding.setMobMode(!AutoClicker.leftHolding.isMobMode());
                     button.setMessage(Language.GUI_MOB_MODE.getText(AutoClicker.leftHolding.isMobMode()));
                     AutoClicker.getInstance().saveConfig();
             })
-            .dimensions(x - 200, y + 44, 130, 20)
+            .dimensions(x - 200, y + 66, 130, 20)
             .build()
         ), "autoclicker-fabric.gui.help.mob-mode");
     }
