@@ -142,6 +142,7 @@ public class AutoClicker implements ModInitializer {
         if (mc.player == null || mc.world == null) {
             return;
         }
+        if(!mc.player.isAlive()) this.isActive = false;
 
         if (this.isActive) {
             if (leftHolding.isActive()) {
@@ -196,7 +197,7 @@ public class AutoClicker implements ModInitializer {
         // Normal holding or cool down behaviour
         // respect cool down
         if (key.isRespectCooldown()) {
-            // Don't do anything if they're not looking at somethign
+            // Don't do anything if they're not looking at something
             if (key instanceof Holding.AttackHolding && ((Holding.AttackHolding) key).isMobMode() && !this.isPlayerLookingAtMob(mc)) {
                 if (key.getKey().isPressed()) {
                     key.getKey().setPressed(false);
@@ -242,7 +243,7 @@ public class AutoClicker implements ModInitializer {
 
     private boolean isPlayerLookingAtMob(MinecraftClient mc) {
         HitResult rayTrace = mc.crosshairTarget;
-        return rayTrace instanceof EntityHitResult && ((EntityHitResult) rayTrace).getEntity() instanceof LivingEntity;
+        return rayTrace instanceof EntityHitResult && ((EntityHitResult) rayTrace).getEntity() instanceof LivingEntity livingEntity && livingEntity.isAlive() && livingEntity.isAttackable();
     }
 
     private void keyInputEvent(MinecraftClient mc) {
@@ -258,9 +259,9 @@ public class AutoClicker implements ModInitializer {
                     );
 
             if (!this.isActive) {
-                leftHolding.getKey().setPressed(false);
-                rightHolding.getKey().setPressed(false);
-                jumpHolding.getKey().setPressed(false);
+                if(leftHolding.isActive()) leftHolding.getKey().setPressed(false);
+                if(rightHolding.isActive()) rightHolding.getKey().setPressed(false);
+                if(jumpHolding.isActive()) jumpHolding.getKey().setPressed(false);
             }
         }
 
