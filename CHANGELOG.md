@@ -1,3 +1,13 @@
+## [21.0.1]
+
+### Fixed
+
+- Correctly unpress buttons we were holding [#54](https://github.com/AdvancedXray/Auto-clicker/issues/54) thanks to [@AdyTech99](https://github.com/AdyTech99)
+- Auto clicker attackas entities that are in the dying stage [#55](https://github.com/AdvancedXray/Auto-clicker/issues/55) thanks to [@AdyTech99](https://github.com/AdyTech99)
+- Auto clicker will continue to attack entities that have died [#56](https://github.com/AdvancedXray/Auto-clicker/issues/56) thanks to [@AdyTech99](https://github.com/AdyTech99)
+- Disable autoclicker on death [#57](https://github.com/AdvancedXray/Auto-clicker/issues/57) thanks to [@AdyTech99](https://github.com/AdyTech99)
+
+
 ## [21.0.0]
 
 ### Changes
