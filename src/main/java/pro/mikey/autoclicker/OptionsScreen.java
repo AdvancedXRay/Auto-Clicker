@@ -6,6 +6,7 @@ import net.minecraft.client.gui.tooltip.HoveredTooltipPositioner;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 
@@ -15,6 +16,10 @@ public class OptionsScreen extends Screen {
 
     protected OptionsScreen() {
         super(Text.empty());
+    }
+
+    public static Screen createScreen(@Nullable Screen parent) {
+        return new OptionsScreen();
     }
 
     @Override
@@ -137,9 +142,9 @@ public class OptionsScreen extends Screen {
 
         this.buttonTooltips.put(this.addDrawableChild(
                 ButtonWidget.builder(
-                    Language.GUI_HUD_ENABLED.getText(AutoClicker.getInstance().config.getHudConfig().isEnabled()), (button) -> {
-                    AutoClicker.getInstance().config.getHudConfig().setEnabled(!AutoClicker.getInstance().config.getHudConfig().isEnabled());
-                    button.setMessage(Language.GUI_HUD_ENABLED.getText(AutoClicker.getInstance().config.getHudConfig().isEnabled()));
+                    Language.GUI_HUD_ENABLED.getText(AutoClicker.hudConfig.isEnabled()), (button) -> {
+                    AutoClicker.hudConfig.setEnabled(!AutoClicker.hudConfig.isEnabled());
+                    button.setMessage(Language.GUI_HUD_ENABLED.getText(AutoClicker.hudConfig.isEnabled()));
                     AutoClicker.getInstance().saveConfig();
                 })
             .dimensions(x - 65, y + 38, 130, 20)
@@ -148,9 +153,9 @@ public class OptionsScreen extends Screen {
 
         this.buttonTooltips.put(this.addDrawableChild(
                 ButtonWidget.builder(
-                    Language.GUI_HUD_LOCATION.getText(AutoClicker.getInstance().config.getHudConfig().getLocation()), (button) -> {
-                        AutoClicker.getInstance().config.getHudConfig().setLocation(getNextLocation(AutoClicker.getInstance().config.getHudConfig().getLocation()));
-                        button.setMessage(Language.GUI_HUD_LOCATION.getText(AutoClicker.getInstance().config.getHudConfig().getLocation()));
+                    Language.GUI_HUD_LOCATION.getText(AutoClicker.hudConfig.getLocation()), (button) -> {
+                        AutoClicker.hudConfig.setLocation(getNextLocation(AutoClicker.hudConfig.getLocation()));
+                        button.setMessage(Language.GUI_HUD_LOCATION.getText(AutoClicker.hudConfig.getLocation()));
                         AutoClicker.getInstance().saveConfig();
                     })
                         .dimensions(x - 65, y + 60, 130, 20)

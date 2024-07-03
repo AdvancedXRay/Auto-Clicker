@@ -37,7 +37,7 @@ public class Config {
                 '}';
     }
 
-    public static class HudConfig{
+    public static class HudConfig {
         private boolean enabled;
         private String location;
 

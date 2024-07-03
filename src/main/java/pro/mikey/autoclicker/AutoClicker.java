@@ -43,9 +43,10 @@ public class AutoClicker implements ModInitializer {
     public static Holding.AttackHolding leftHolding;
     public static Holding rightHolding;
     public static Holding jumpHolding;
+    public static Config.HudConfig hudConfig;
     private static AutoClicker INSTANCE;
     private boolean isActive = false;
-    public Config config = new Config(
+    private Config config = new Config(
             new Config.LeftMouseConfig(false, false, 0, false, false, false),
             new Config.RightMouseConfig(false, false, 0),
             new Config.JumpConfig(false, false, 0),
@@ -88,17 +89,22 @@ public class AutoClicker implements ModInitializer {
                 FileReader json = new FileReader(CONFIG_FILE.toFile());
                 Config config = new Gson().fromJson(json, Config.class);
                 json.close();
-                if (config != null && config.getJump() != null) {
+                if (config != null && config.getHudConfig() != null) {
                     this.config = config;
                 }
-            } catch (JsonIOException | IOException e) {
+            // } catch (JsonIOException | IOException e) {
+                //The above lines was replaced with the below one.
+                //This is to fix a bug, where replacing the config text with a non json-conforming text (which can happen by accident) crashes the mod.
+            } catch (Exception e){
                 e.printStackTrace();
+                this.saveConfig();
             }
         }
 
         leftHolding = new Holding.AttackHolding(client.options.attackKey, this.config.getLeftClick());
         rightHolding = new Holding(client.options.useKey, this.config.getRightClick());
         jumpHolding = new Holding(client.options.jumpKey, this.config.getJump());
+        hudConfig = this.config.getHudConfig();
     }
 
     public void saveConfig() {
