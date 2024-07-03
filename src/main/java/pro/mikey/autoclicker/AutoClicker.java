@@ -78,7 +78,7 @@ public class AutoClicker implements ModInitializer {
             try {
                 Files.createDirectories(CONFIG_DIR);
                 Files.createFile(CONFIG_FILE);
-            } catch (Exception e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
 
@@ -91,7 +91,7 @@ public class AutoClicker implements ModInitializer {
                 if (config != null && config.getHudConfig() != null) {
                     this.config = config;
                 }
-            } catch (IOException e){
+            } catch (Exception e){
                 e.printStackTrace();
                 this.saveConfig();
             }
