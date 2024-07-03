@@ -45,10 +45,11 @@ public class AutoClicker implements ModInitializer {
     public static Holding jumpHolding;
     private static AutoClicker INSTANCE;
     private boolean isActive = false;
-    private Config config = new Config(
+    public Config config = new Config(
             new Config.LeftMouseConfig(false, false, 0, false, false, false),
             new Config.RightMouseConfig(false, false, 0),
-            new Config.JumpConfig(false, false, 0)
+            new Config.JumpConfig(false, false, 0),
+            new Config.HudConfig(true, "top-left")
     );
 
     public AutoClicker() {
@@ -69,6 +70,7 @@ public class AutoClicker implements ModInitializer {
         KeyBindingHelper.registerKeyBinding(rightClickToggle);
 
         ClientLifecycleEvents.CLIENT_STARTED.register(this::clientReady);
+        ModCommands.registerCommands();
         HudRenderCallback.EVENT.register(this::RenderGameOverlayEvent);
     }
 
@@ -113,29 +115,48 @@ public class AutoClicker implements ModInitializer {
     }
 
     private void RenderGameOverlayEvent(DrawContext context, RenderTickCounter delta) {
-        if ((!leftHolding.isActive() && !rightHolding.isActive() && !jumpHolding.isActive()) || !this.isActive) {
+
+        if ((!leftHolding.isActive() && !rightHolding.isActive() && !jumpHolding.isActive()) || !this.isActive || !config.getHudConfig().isEnabled()) {
             return;
         }
 
         MinecraftClient client = MinecraftClient.getInstance();
 
-        int y = 10;
+        int y = getHudY();
+        int x = getHudX();
         if (leftHolding.isActive()) {
             Text text = Language.HUD_HOLDING.getText(I18n.translate(leftHolding.getKey().getTranslationKey()));
-            context.drawTextWithShadow(client.textRenderer, text.asOrderedText(), 10, y, 0xffffff);
+            context.drawTextWithShadow(client.textRenderer, text.asOrderedText(), x, y, 0xffffff);
             y += 15;
         }
 
         if (rightHolding.isActive()) {
             Text text = Language.HUD_HOLDING.getText(I18n.translate(rightHolding.getKey().getTranslationKey()));
-            context.drawTextWithShadow(client.textRenderer, text.asOrderedText(), 10, y, 0xffffff);
+            context.drawTextWithShadow(client.textRenderer, text.asOrderedText(), x, y, 0xffffff);
             y += 15;
         }
 
         if (jumpHolding.isActive()) {
             Text text = Language.HUD_HOLDING.getText(I18n.translate(jumpHolding.getKey().getTranslationKey()));
-            context.drawTextWithShadow(client.textRenderer, text.asOrderedText(), 10, y, 0xffffff);
+            context.drawTextWithShadow(client.textRenderer, text.asOrderedText(), x, y, 0xffffff);
         }
+    }
+
+    public int getHudX(){
+        String location = this.config.getHudConfig().getLocation();
+        return switch (location) {
+            case "top-left", "bottom-left" -> 10;
+            case "top-right", "bottom-right" -> (MinecraftClient.getInstance().getWindow().getWidth() / 2) - MinecraftClient.getInstance().getWindow().getWidth() / 10;
+            default -> 10;
+        };
+    }
+    public int getHudY(){
+        String location = this.config.getHudConfig().getLocation();
+        return switch (location) {
+            case "top-left", "top-right" -> 10;
+            case "bottom-left", "bottom-right" -> (MinecraftClient.getInstance().getWindow().getHeight() / 2) - 50;
+            default -> 10;
+        };
     }
 
     private void clientTickEvent(MinecraftClient mc) {
