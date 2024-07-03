@@ -1,7 +1,6 @@
 package pro.mikey.autoclicker;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonIOException;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -79,7 +78,7 @@ public class AutoClicker implements ModInitializer {
             try {
                 Files.createDirectories(CONFIG_DIR);
                 Files.createFile(CONFIG_FILE);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -92,10 +91,7 @@ public class AutoClicker implements ModInitializer {
                 if (config != null && config.getHudConfig() != null) {
                     this.config = config;
                 }
-            // } catch (JsonIOException | IOException e) {
-                //The above lines was replaced with the below one.
-                //This is to fix a bug, where replacing the config text with a non json-conforming text (which can happen by accident) crashes the mod.
-            } catch (Exception e){
+            } catch (IOException e){
                 e.printStackTrace();
                 this.saveConfig();
             }
