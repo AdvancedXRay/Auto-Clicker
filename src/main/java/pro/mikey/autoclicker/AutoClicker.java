@@ -70,7 +70,6 @@ public class AutoClicker implements ModInitializer {
         KeyBindingHelper.registerKeyBinding(rightClickToggle);
 
         ClientLifecycleEvents.CLIENT_STARTED.register(this::clientReady);
-        ModCommands.registerCommands();
         HudRenderCallback.EVENT.register(this::RenderGameOverlayEvent);
     }
 
