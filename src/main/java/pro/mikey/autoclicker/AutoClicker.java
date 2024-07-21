@@ -147,7 +147,7 @@ public class AutoClicker implements ModInitializer {
         String location = this.config.getHudConfig().getLocation();
         return switch (location) {
             case "top-left", "bottom-left" -> 10;
-            case "top-right", "bottom-right" -> (MinecraftClient.getInstance().getWindow().getWidth() / 2) - MinecraftClient.getInstance().getWindow().getWidth() / 10;
+            case "top-right", "bottom-right" -> (MinecraftClient.getInstance().getWindow().getScaledWidth()) - (MinecraftClient.getInstance().options.getGuiScale().getValue() <= 4 ? (MinecraftClient.getInstance().getWindow().getScaledWidth() / 5) : (MinecraftClient.getInstance().getWindow().getScaledWidth() / 3));
             default -> 10;
         };
     }
@@ -155,7 +155,7 @@ public class AutoClicker implements ModInitializer {
         String location = this.config.getHudConfig().getLocation();
         return switch (location) {
             case "top-left", "top-right" -> 10;
-            case "bottom-left", "bottom-right" -> (MinecraftClient.getInstance().getWindow().getHeight() / 2) - 50;
+            case "bottom-left", "bottom-right" -> (MinecraftClient.getInstance().getWindow().getScaledHeight()) - 50;
             default -> 10;
         };
     }
