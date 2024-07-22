@@ -1,3 +1,14 @@
+## [21.0.2]
+
+### Added 
+
+- Option to move the hud around on the screen [#26](https://github.com/AdvancedXRay/Auto-Clicker/issues/26) thanks to [@AdyTech99](https://github.com/AdyTech99) ([#61](https://github.com/AdvancedXRay/Auto-Clicker/pull/61))
+- Mod menu support for opening the config screen via Mod Menu [#59](https://github.com/AdvancedXRay/Auto-Clicker/issues/59) thanks to [@AdyTech99](https://github.com/AdyTech99) ([#61](https://github.com/AdvancedXRay/Auto-Clicker/pull/61))
+
+### Changed
+
+- Better support invalid config values [#60](https://github.com/AdvancedXRay/Auto-Clicker/issues/60) thanks to [@AdyTech99](https://github.com/AdyTech99) ([#61](https://github.com/AdvancedXRay/Auto-Clicker/pull/61))
+
 ## [21.0.1]
 
 ### Fixed
