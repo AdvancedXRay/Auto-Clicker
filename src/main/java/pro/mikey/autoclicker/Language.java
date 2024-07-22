@@ -15,7 +15,9 @@ public enum Language {
     GUI_JUMP("autoclicker-fabric.gui.jump"),
     GUI_RESPECT_COOLDOWN("autoclicker-fabric.gui.respect"),
     GUI_RESPECT_SHIELD("autoclicker-fabric.gui.shield"),
-    GUI_MOB_MODE("autoclicker-fabric.gui.mob-mode");
+    GUI_MOB_MODE("autoclicker-fabric.gui.mob-mode"),
+    GUI_HUD_ENABLED("autoclicker-fabric.gui.hud-enabled"),
+    GUI_HUD_LOCATION("autoclicker-fabric.gui.hud-location");
 
     private final String key;
     MutableText text;

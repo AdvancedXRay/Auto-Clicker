@@ -5,11 +5,13 @@ public class Config {
     private final LeftMouseConfig leftClick;
     private final RightMouseConfig rightClick;
     private final JumpConfig jump;
+    private final HudConfig hudConfig;
 
-    public Config(LeftMouseConfig leftClick, RightMouseConfig rightClick, JumpConfig jump) {
+    public Config(LeftMouseConfig leftClick, RightMouseConfig rightClick, JumpConfig jump, HudConfig hudConfig) {
         this.leftClick = leftClick;
         this.rightClick = rightClick;
         this.jump = jump;
+        this.hudConfig = hudConfig;
     }
 
     public LeftMouseConfig getLeftClick() {
@@ -24,6 +26,8 @@ public class Config {
         return this.jump;
     }
 
+    public HudConfig getHudConfig(){return this.hudConfig;}
+
     @Override
     public String toString() {
         return "Config{" +
@@ -31,6 +35,39 @@ public class Config {
                 ", rightClick=" + this.rightClick +
                 ", jump=" + this.jump +
                 '}';
+    }
+
+    public static class HudConfig {
+        private boolean enabled;
+        private String location;
+
+        public HudConfig(Boolean enabled, String location){
+            this.enabled = enabled;
+            this.location = location;
+        }
+
+        public boolean isEnabled() {
+            return this.enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        public String getLocation(){
+            return this.location;
+        }
+
+        public void setLocation(String location) {
+            this.location = location;
+        }
+
+        public String toString(){
+            return "Config{" +
+                    "hudEnabled=" + this.enabled +
+                    ", hudLocation=" + this.location +
+                    '}';
+        }
     }
 
     public static class LeftMouseConfig extends SharedConfig {

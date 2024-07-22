@@ -1,7 +1,6 @@
 package pro.mikey.autoclicker;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonIOException;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -43,12 +42,14 @@ public class AutoClicker implements ModInitializer {
     public static Holding.AttackHolding leftHolding;
     public static Holding rightHolding;
     public static Holding jumpHolding;
+    public static Config.HudConfig hudConfig;
     private static AutoClicker INSTANCE;
     private boolean isActive = false;
     private Config config = new Config(
             new Config.LeftMouseConfig(false, false, 0, false, false, false),
             new Config.RightMouseConfig(false, false, 0),
-            new Config.JumpConfig(false, false, 0)
+            new Config.JumpConfig(false, false, 0),
+            new Config.HudConfig(true, "top-left")
     );
 
     public AutoClicker() {
@@ -87,17 +88,19 @@ public class AutoClicker implements ModInitializer {
                 FileReader json = new FileReader(CONFIG_FILE.toFile());
                 Config config = new Gson().fromJson(json, Config.class);
                 json.close();
-                if (config != null && config.getJump() != null) {
+                if (config != null && config.getHudConfig() != null) {
                     this.config = config;
                 }
-            } catch (JsonIOException | IOException e) {
+            } catch (Exception e){
                 e.printStackTrace();
+                this.saveConfig();
             }
         }
 
         leftHolding = new Holding.AttackHolding(client.options.attackKey, this.config.getLeftClick());
         rightHolding = new Holding(client.options.useKey, this.config.getRightClick());
         jumpHolding = new Holding(client.options.jumpKey, this.config.getJump());
+        hudConfig = this.config.getHudConfig();
     }
 
     public void saveConfig() {
@@ -113,29 +116,52 @@ public class AutoClicker implements ModInitializer {
     }
 
     private void RenderGameOverlayEvent(DrawContext context, RenderTickCounter delta) {
-        if ((!leftHolding.isActive() && !rightHolding.isActive() && !jumpHolding.isActive()) || !this.isActive) {
+
+        if ((!leftHolding.isActive() && !rightHolding.isActive() && !jumpHolding.isActive()) || !this.isActive || !config.getHudConfig().isEnabled()) {
             return;
         }
 
         MinecraftClient client = MinecraftClient.getInstance();
 
-        int y = 10;
         if (leftHolding.isActive()) {
             Text text = Language.HUD_HOLDING.getText(I18n.translate(leftHolding.getKey().getTranslationKey()));
-            context.drawTextWithShadow(client.textRenderer, text.asOrderedText(), 10, y, 0xffffff);
-            y += 15;
+            int y = getHudY() + (15 * 0);
+            int x = getHudX(text);
+            context.drawTextWithShadow(client.textRenderer, text.asOrderedText(), x, y, 0xffffff);
         }
 
         if (rightHolding.isActive()) {
             Text text = Language.HUD_HOLDING.getText(I18n.translate(rightHolding.getKey().getTranslationKey()));
-            context.drawTextWithShadow(client.textRenderer, text.asOrderedText(), 10, y, 0xffffff);
-            y += 15;
+            int y = getHudY() + (15 * 1);
+            int x = getHudX(text);
+            context.drawTextWithShadow(client.textRenderer, text.asOrderedText(), x, y, 0xffffff);
         }
 
         if (jumpHolding.isActive()) {
             Text text = Language.HUD_HOLDING.getText(I18n.translate(jumpHolding.getKey().getTranslationKey()));
-            context.drawTextWithShadow(client.textRenderer, text.asOrderedText(), 10, y, 0xffffff);
+            int y = getHudY() + (15 * 2);
+            int x = getHudX(text);
+            context.drawTextWithShadow(client.textRenderer, text.asOrderedText(), x, y, 0xffffff);
         }
+    }
+
+    public int getHudX(Text text){
+        MinecraftClient client = MinecraftClient.getInstance();
+
+        String location = this.config.getHudConfig().getLocation();
+        return switch (location) {
+            case "top-left", "bottom-left" -> 10;
+            case "top-right", "bottom-right" -> (MinecraftClient.getInstance().getWindow().getScaledWidth()) - 10 - client.textRenderer.getWidth(text);
+            default -> 10;
+        };
+    }
+    public int getHudY(){
+        String location = this.config.getHudConfig().getLocation();
+        return switch (location) {
+            case "top-left", "top-right" -> 10;
+            case "bottom-left", "bottom-right" -> (MinecraftClient.getInstance().getWindow().getScaledHeight()) - 50;
+            default -> 10;
+        };
     }
 
     private void clientTickEvent(MinecraftClient mc) {

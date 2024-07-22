@@ -10,7 +10,8 @@
   ],
   "contact": {
     "homepage": "https://mikey.pro/",
-    "sources": "https://github.com/michaelhillcox/auto-clicker-fabric"
+    "sources": "https://github.com/michaelhillcox/auto-clicker-fabric",
+    "issues": "https://github.com/michaelhillcox/auto-clicker-fabric/issues"
   },
   "license": "MIT",
   "icon": "assets/autoclicker-fabric/icon.png",
@@ -18,7 +19,8 @@
   "entrypoints": {
     "main": [
       "pro.mikey.autoclicker.AutoClicker"
-    ]
+    ],
+    "modmenu" : ["pro.mikey.autoclicker.ModMenuAPIImpl"]
   },
   "depends": {
     "fabricloader": ">=${fabricloader}",
