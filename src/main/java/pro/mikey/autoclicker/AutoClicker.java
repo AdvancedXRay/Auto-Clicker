@@ -123,31 +123,35 @@ public class AutoClicker implements ModInitializer {
 
         MinecraftClient client = MinecraftClient.getInstance();
 
-        int y = getHudY();
-        int x = getHudX();
         if (leftHolding.isActive()) {
             Text text = Language.HUD_HOLDING.getText(I18n.translate(leftHolding.getKey().getTranslationKey()));
+            int y = getHudY() + (15 * 0);
+            int x = getHudX(text);
             context.drawTextWithShadow(client.textRenderer, text.asOrderedText(), x, y, 0xffffff);
-            y += 15;
         }
 
         if (rightHolding.isActive()) {
             Text text = Language.HUD_HOLDING.getText(I18n.translate(rightHolding.getKey().getTranslationKey()));
+            int y = getHudY() + (15 * 1);
+            int x = getHudX(text);
             context.drawTextWithShadow(client.textRenderer, text.asOrderedText(), x, y, 0xffffff);
-            y += 15;
         }
 
         if (jumpHolding.isActive()) {
             Text text = Language.HUD_HOLDING.getText(I18n.translate(jumpHolding.getKey().getTranslationKey()));
+            int y = getHudY() + (15 * 2);
+            int x = getHudX(text);
             context.drawTextWithShadow(client.textRenderer, text.asOrderedText(), x, y, 0xffffff);
         }
     }
 
-    public int getHudX(){
+    public int getHudX(Text text){
+        MinecraftClient client = MinecraftClient.getInstance();
+
         String location = this.config.getHudConfig().getLocation();
         return switch (location) {
             case "top-left", "bottom-left" -> 10;
-            case "top-right", "bottom-right" -> (MinecraftClient.getInstance().getWindow().getScaledWidth()) - (MinecraftClient.getInstance().options.getGuiScale().getValue() <= 4 ? (MinecraftClient.getInstance().getWindow().getScaledWidth() / 5) : (MinecraftClient.getInstance().getWindow().getScaledWidth() / 3));
+            case "top-right", "bottom-right" -> (MinecraftClient.getInstance().getWindow().getScaledWidth()) - 10 - client.textRenderer.getWidth(text);
             default -> 10;
         };
     }
