@@ -197,15 +197,15 @@ public class AutoClicker implements ModInitializer {
             // How to handle the click if it's done by spamming
             if (key.getSpeed() > 0) {
                 if (key.getTimeout() <= 1) {
+                    if (key.getTimeout() <= 0) {
+                        key.resetTimeout();
+                    }
+
                     // Press the button twice by toggling 1 and 0
                     key.getKey().setPressed(key.getTimeout() == 1);
 
                     if (key.getKey().isPressed()) {
                         this.attemptMobAttack(mc, key);
-                    }
-
-                    if (key.getTimeout() <= 0) {
-                        key.resetTimeout();
                     }
                 }
                 key.decreaseTimeout();

@@ -4,6 +4,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.HoveredTooltipPositioner;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
@@ -12,7 +13,10 @@ import java.util.HashMap;
 
 public class OptionsScreen extends Screen {
     private final HashMap<ButtonWidget, String> buttonTooltips = new HashMap<>();
-    private final HashMap<OptionsSliderWidget, String> sliderTooltips = new HashMap<>();
+    private final HashMap<TextFieldWidget, String> sliderTooltips = new HashMap<>();
+    private TextFieldWidget leftHoldingSpamSpeed;
+    private TextFieldWidget rightHoldingSpamSpeed;
+    private TextFieldWidget jumpHoldingSpamSpeed;
 
     protected OptionsScreen() {
         super(Text.empty());
@@ -25,6 +29,68 @@ public class OptionsScreen extends Screen {
     @Override
     protected void init() {
         int x = (this.width / 2), y = (this.height / 2);
+
+        leftHoldingSpamSpeed = new TextFieldWidget(client.textRenderer, x - 200, y-50, 130, 20, Text.of(String.valueOf(AutoClicker.leftHolding.getSpeed())));
+        rightHoldingSpamSpeed = new TextFieldWidget(client.textRenderer, x - 65, y-50, 130, 20, Text.of(String.valueOf(AutoClicker.rightHolding.getSpeed())));
+        jumpHoldingSpamSpeed = new TextFieldWidget(client.textRenderer, x + 70, y-50, 130, 20, Text.of(String.valueOf(AutoClicker.jumpHolding.getSpeed())));
+
+        leftHoldingSpamSpeed.setText(String.valueOf(AutoClicker.leftHolding.getSpeed()));
+        rightHoldingSpamSpeed.setText(String.valueOf(AutoClicker.rightHolding.getSpeed()));
+        jumpHoldingSpamSpeed.setText(String.valueOf(AutoClicker.jumpHolding.getSpeed()));
+
+        leftHoldingSpamSpeed.setChangedListener(s -> {
+            if(s.startsWith("0") && s.length() > 1){
+                s = s.substring(1);
+                leftHoldingSpamSpeed.setText(s);
+            }
+
+            try {
+                AutoClicker.leftHolding.setSpeed(Integer.parseInt(s));
+            }
+            catch (NumberFormatException e){
+                AutoClicker.leftHolding.setSpeed(0);
+                leftHoldingSpamSpeed.setText(String.valueOf(AutoClicker.leftHolding.getSpeed()));
+            }
+
+            AutoClicker.getInstance().saveConfig();
+        });
+
+
+        rightHoldingSpamSpeed.setChangedListener(s -> {
+            if(s.startsWith("0") && s.length() > 1){
+                s = s.substring(1);
+                rightHoldingSpamSpeed.setText(s);
+            }
+
+            try {
+                AutoClicker.rightHolding.setSpeed(Integer.parseInt(s));
+            }
+            catch (NumberFormatException e){
+                AutoClicker.rightHolding.setSpeed(0);
+                rightHoldingSpamSpeed.setText(String.valueOf(AutoClicker.rightHolding.getSpeed()));
+            }
+
+            AutoClicker.getInstance().saveConfig();
+        });
+
+        jumpHoldingSpamSpeed.setChangedListener(s -> {
+            if(s.startsWith("0") && s.length() > 1){
+                s = s.substring(1);
+                jumpHoldingSpamSpeed.setText(s);
+            }
+
+            try {
+                AutoClicker.jumpHolding.setSpeed(Integer.parseInt(s));
+            }
+            catch (NumberFormatException e){
+                AutoClicker.jumpHolding.setSpeed(0);
+                jumpHoldingSpamSpeed.setText(String.valueOf(AutoClicker.jumpHolding.getSpeed()));
+            }
+
+            AutoClicker.getInstance().saveConfig();
+        });
+
+        // Button Tooltips
 
         this.buttonTooltips.put(this.addDrawableChild(
             ButtonWidget.builder(
@@ -92,20 +158,11 @@ public class OptionsScreen extends Screen {
             .build()
         ), "autoclicker-fabric.gui.help.spamming");
 
-        this.sliderTooltips.put(this.addDrawableChild(new OptionsSliderWidget(x - 200, y-50, 130, 20, Language.GUI_SPEED.getText(), AutoClicker.leftHolding.getSpeed() / 50f, value -> {
-            AutoClicker.leftHolding.setSpeed(value);
-            AutoClicker.getInstance().saveConfig();
-        })), "autoclicker-fabric.gui.help.spam-speed");
+        this.sliderTooltips.put(this.addDrawableChild(leftHoldingSpamSpeed), "autoclicker-fabric.gui.help.spam-speed");
 
-        this.sliderTooltips.put(this.addDrawableChild(new OptionsSliderWidget(x - 65, y-50, 130, 20, Language.GUI_SPEED.getText(), AutoClicker.rightHolding.getSpeed() / 50f, value -> {
-            AutoClicker.rightHolding.setSpeed(value);
-            AutoClicker.getInstance().saveConfig();
-        })), "autoclicker-fabric.gui.help.spam-speed");
+        this.sliderTooltips.put(this.addDrawableChild(rightHoldingSpamSpeed), "autoclicker-fabric.gui.help.spam-speed");
 
-        this.sliderTooltips.put(this.addDrawableChild(new OptionsSliderWidget(x + 70, y-50, 130, 20, Language.GUI_SPEED.getText(), AutoClicker.jumpHolding.getSpeed() / 50f, value -> {
-            AutoClicker.jumpHolding.setSpeed(value);
-            AutoClicker.getInstance().saveConfig();
-        })), "autoclicker-fabric.gui.help.spam-speed");
+        this.sliderTooltips.put(this.addDrawableChild(jumpHoldingSpamSpeed), "autoclicker-fabric.gui.help.spam-speed");
 
         this.buttonTooltips.put(this.addDrawableChild(
             ButtonWidget.builder(
@@ -202,9 +259,9 @@ public class OptionsScreen extends Screen {
         	}
         }
 
-        for (OptionsSliderWidget slider : sliderTooltips.keySet()) {
-        	if (slider.isHovered()) {
-        		this.renderHelpingTip(context, Text.translatable(this.sliderTooltips.get(slider)), mouseX, mouseY);
+        for (TextFieldWidget widget : sliderTooltips.keySet()) {
+        	if (widget.isHovered()) {
+        		this.renderHelpingTip(context, Text.translatable(this.sliderTooltips.get(widget)), mouseX, mouseY);
         	}
         }
     }
