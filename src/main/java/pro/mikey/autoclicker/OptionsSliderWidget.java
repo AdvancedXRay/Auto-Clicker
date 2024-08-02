@@ -5,6 +5,7 @@ import net.minecraft.text.Text;
 
 import java.util.function.Consumer;
 
+@Deprecated
 public class OptionsSliderWidget extends SliderWidget {
     public Consumer<Integer> onUpdate;
 
@@ -16,11 +17,11 @@ public class OptionsSliderWidget extends SliderWidget {
 
     @Override
     protected void updateMessage() {
-        this.setMessage(Language.GUI_SPEED.getText((int) Math.round(this.value * 50)));
+        this.setMessage(Language.GUI_SPEED.getText((int) Math.round(this.value * 1200)));
     }
 
     @Override
     protected void applyValue() {
-        this.onUpdate.accept((int) Math.round(this.value * 50));
+        this.onUpdate.accept((int) Math.round(this.value * 1200));
     }
 }
