@@ -70,7 +70,7 @@ public class Holding {
     }
 
     public void resetTimeout() {
-        this.timeout = this.config.getCpt() != 1 ? this.config.getCpt() : 2;
+        this.timeout = this.config.getCpt();
     }
 
     public void decreaseTimeout() {
