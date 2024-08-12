@@ -1,3 +1,13 @@
+## [21.0.3]
+
+### Changed
+
+- You can now set the 'spamming' delay to any value using an input instead of a slider thanks to [@AdyTech99](https://github.com/AdyTech99)
+
+### Fixed
+
+- Auto clicker would fail to work if 'spamming' was set to `1` on the delay. Thanks to [@AdyTech99](https://github.com/AdyTech99)
+
 ## [21.0.2]
 
 ### Added 
@@ -17,7 +27,6 @@
 - Auto clicker attackas entities that are in the dying stage [#55](https://github.com/AdvancedXray/Auto-clicker/issues/55) thanks to [@AdyTech99](https://github.com/AdyTech99)
 - Auto clicker will continue to attack entities that have died [#56](https://github.com/AdvancedXray/Auto-clicker/issues/56) thanks to [@AdyTech99](https://github.com/AdyTech99)
 - Disable autoclicker on death [#57](https://github.com/AdvancedXray/Auto-clicker/issues/57) thanks to [@AdyTech99](https://github.com/AdyTech99)
-
 
 ## [21.0.0]
 
