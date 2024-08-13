@@ -1,8 +1,8 @@
-package pro.mikey.autoclicker;
+package pro.mikey.autoclicker.fabric.client;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
-import net.minecraft.client.gui.screen.Screen;
+import pro.mikey.autoclicker.OptionsScreen;
 
 
 public class ModMenuAPIImpl implements ModMenuApi {

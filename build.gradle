@@ -1,125 +1,70 @@
 plugins {
-    id 'fabric-loom' version '1.7-SNAPSHOT'
-    id 'maven-publish'
-    id 'pro.mikey.plugins.insaniam' version "0.1-SNAPSHOT"
-    id "me.modmuss50.mod-publish-plugin" version "0.5.1"
+    id 'dev.architectury.loom' version '1.6-SNAPSHOT' apply false
+    id 'architectury-plugin' version '3.4-SNAPSHOT'
+    id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
 }
 
-sourceCompatibility = JavaVersion.VERSION_21
-targetCompatibility = JavaVersion.VERSION_21
-
-def ENV = System.getenv()
-
-archivesBaseName = project.archives_base_name
-version = project.mod_version
-group = project.maven_group
-
-repositories {
-    maven { url "https://maven.terraformersmc.com/releases/"}
+architectury {
+    minecraft = project.minecraft_version
 }
 
-dependencies {
-    // To change the versions see the gradle.properties file
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+allprojects {
+    group = rootProject.maven_group
+    version = rootProject.mod_version
 }
 
-processResources {
-    inputs.property "version", project.version
-    inputs.property "fabricloader", project.loader_version
-    inputs.property "mc_version", project.minecraft_version
+subprojects {
+    apply plugin: 'dev.architectury.loom'
+    apply plugin: 'architectury-plugin'
+    apply plugin: 'maven-publish'
 
-    filesMatching("fabric.mod.json") {
-        expand "version": project.version,
-                "fabricloader": project.loader_version,
-                "mc_version": project.minecraft_version
+    base {
+        // Set up a suffixed format for the mod jar names, e.g. `example-fabric`.
+        archivesName = "$rootProject.archives_name-$project.name"
     }
-}
 
-tasks.withType(JavaCompile).configureEach {
-    it.options.encoding = "UTF-8"
-    it.options.release = 21
-}
-
-java {
-    withSourcesJar()
-}
-
-jar {
-    from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}" }
+    repositories {
+        maven { url "https://maven.terraformersmc.com/releases/"}
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
-}
 
-// configure the maven publication
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            groupId project.group
-            artifactId project.archivesBaseName
-            version project.version
-            from components.java
+    dependencies {
+        minecraft "net.minecraft:minecraft:$rootProject.minecraft_version"
+        mappings loom.layered {
+            it.mappings("net.fabricmc:yarn:$rootProject.yarn_mappings:v2")
+            it.mappings("dev.architectury:yarn-mappings-patch-neoforge:$rootProject.yarn_mappings_patch_neoforge_version")
         }
     }
-    repositories {
-        if (ENV.SAPS_TOKEN) {
-            maven {
-                url "https://maven.saps.dev/releases"
-                credentials {
-                    username = "mikeymods"
-                    password = "${ENV.SAPS_TOKEN}"
-                }
+
+    java {
+        // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+        // if it is present.
+        // If you remove this line, sources will not be generated.
+        withSourcesJar()
+
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        it.options.release = 21
+    }
+
+    // Configure Maven publishing.
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                artifactId = base.archivesName.get()
+                from components.java
             }
         }
-    }
-}
 
-def changelogData = insaniamUtils.createChangelog {
-    file = file('CHANGELOG.md')
-    versionPattern = ~/## \[[^]]+]/
-    fallbackValue = "No changelog provided"
-    version = project.mod_version
-}
-
-publishMods {
-    def curseToken = providers.environmentVariable("CURSE_DEPLOY_TOKEN")
-
-    dryRun = !curseToken.isPresent()
-    changelog = changelogData
-    version = project.mod_version
-    type = STABLE
-    file = remapJar.archiveFile
-
-    curseforge {
-        displayName = "Auto Clicker Fabric ${mod_version}"
-        modLoaders.add("fabric")
-        accessToken = curseToken
-        projectId = project.curseforge_id
-        minecraftVersions.add("${minecraft_version}")
-        javaVersions.add(JavaVersion.VERSION_21)
-        requires {
-            slug = "fabric-api"
+        // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+        repositories {
+            // Add repositories to publish to here.
+            // Notice: This block does NOT have the same function as the block in the top level.
+            // The repositories here will be used for publishing your artifact, not for
+            // retrieving dependencies.
         }
-    }
-
-    modrinth {
-        displayName = "Auto Clicker Fabric ${mod_version}"
-        modLoaders.add("fabric")
-        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
-        projectId = project.modrinth_id
-        minecraftVersions.add("${minecraft_version}")
-        requires {
-            slug = "fabric-api"
-        }
-    }
-
-    github {
-        repository = "AdvancedXRay/Auto-Clicker-Fabric"
-        accessToken = providers.environmentVariable("GITHUB_TOKEN")
-        commitish = providers.environmentVariable("GITHUB_SHA").orElse("main")
-        tagName = providers.environmentVariable("GITHUB_REF_NAME").orElse("v${mod_version}")
     }
 }

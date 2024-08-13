@@ -1,11 +1,6 @@
 package pro.mikey.autoclicker;
 
 import com.google.gson.Gson;
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -30,12 +25,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class AutoClicker implements ModInitializer {
-    public static final String MOD_ID = "autoclicker-fabric";
+public class AutoClicker {
+    public static final String MOD_ID = "autoclicker";
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
     public static final KeyBinding rightClickToggle =
             new KeyBinding("keybinding.open-gui", GLFW.GLFW_KEY_O, "category.autoclicker-fabric");
-    private static final KeyBinding toggleHolding =
+    public static final KeyBinding toggleHolding =
             new KeyBinding("keybinding.toggle-hold", GLFW.GLFW_KEY_I, "category.autoclicker-fabric");
     private static final Path CONFIG_DIR = Paths.get(MinecraftClient.getInstance().runDirectory.getPath() + "/config");
     private static final Path CONFIG_FILE = Paths.get(CONFIG_DIR + "/auto-clicker-fabric.json");
@@ -60,20 +55,11 @@ public class AutoClicker implements ModInitializer {
         return INSTANCE;
     }
 
-    @Override
     public void onInitialize() {
         LOGGER.info("Auto Clicker Initialised");
-
-        ClientTickEvents.END_CLIENT_TICK.register(this::clientTickEvent);
-
-        KeyBindingHelper.registerKeyBinding(toggleHolding);
-        KeyBindingHelper.registerKeyBinding(rightClickToggle);
-
-        ClientLifecycleEvents.CLIENT_STARTED.register(this::clientReady);
-        HudRenderCallback.EVENT.register(this::RenderGameOverlayEvent);
     }
 
-    private void clientReady(MinecraftClient client) {
+    public void clientReady(MinecraftClient client) {
         if (!Files.exists(CONFIG_FILE)) {
             try {
                 Files.createDirectories(CONFIG_DIR);
@@ -115,7 +101,7 @@ public class AutoClicker implements ModInitializer {
         }
     }
 
-    private void RenderGameOverlayEvent(DrawContext context, RenderTickCounter delta) {
+    public void RenderGameOverlayEvent(DrawContext context, RenderTickCounter delta) {
 
         if ((!leftHolding.isActive() && !rightHolding.isActive() && !jumpHolding.isActive()) || !this.isActive || !config.getHudConfig().isEnabled()) {
             return;
@@ -164,7 +150,7 @@ public class AutoClicker implements ModInitializer {
         };
     }
 
-    private void clientTickEvent(MinecraftClient mc) {
+    public void clientTickEvent(MinecraftClient mc) {
         if (mc.player == null || mc.world == null) {
             return;
         }
@@ -274,7 +260,6 @@ public class AutoClicker implements ModInitializer {
 
     private void keyInputEvent(MinecraftClient mc) {
         assert mc.player != null;
-
         while (toggleHolding.wasPressed()) {
             this.isActive = !this.isActive;
             mc.player.sendMessage(
