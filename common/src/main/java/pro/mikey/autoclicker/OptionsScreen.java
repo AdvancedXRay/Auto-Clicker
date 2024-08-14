@@ -268,7 +268,7 @@ public class OptionsScreen extends Screen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == AutoClicker.rightClickToggle.getDefaultKey().getCode()) {
+        if (keyCode == AutoClicker.openConfig.getDefaultKey().getCode()) {
             this.close();
             return true;
         }

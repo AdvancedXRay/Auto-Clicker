@@ -28,7 +28,7 @@ import java.nio.file.Paths;
 public class AutoClicker {
     public static final String MOD_ID = "autoclicker";
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
-    public static final KeyBinding rightClickToggle =
+    public static final KeyBinding openConfig =
             new KeyBinding("keybinding.open-gui", GLFW.GLFW_KEY_O, "category.autoclicker-fabric");
     public static final KeyBinding toggleHolding =
             new KeyBinding("keybinding.toggle-hold", GLFW.GLFW_KEY_I, "category.autoclicker-fabric");
@@ -276,8 +276,12 @@ public class AutoClicker {
             }
         }
 
-        while (rightClickToggle.wasPressed()) {
-            mc.setScreen(new OptionsScreen());
+        while (openConfig.wasPressed()) {
+            mc.setScreen(getConfigScreen());
         }
+    }
+
+    public OptionsScreen getConfigScreen(){
+        return new OptionsScreen();
     }
 }
