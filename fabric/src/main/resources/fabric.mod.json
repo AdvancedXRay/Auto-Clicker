@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "autoclicker",
+  "version": "${version}",
+  "name": "Auto Clicker",
+  "description": "Automatically left and right clicks for you, how kind!",
+  "authors": [
+    "ErrorMikey",
+    "Advanced XRay team"
+  ],
+  "contact": {
+    "homepage": "https://mikey.pro/",
+    "sources": "https://github.com/michaelhillcox/auto-clicker-fabric",
+    "issues": "https://github.com/michaelhillcox/auto-clicker-fabric/issues"
+  },
+  "license": "MIT",
+  "icon": "assets/autoclicker-fabric/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "pro.mikey.autoclicker.fabric.client.AutoClickerFabricClient"
+    ],
+    "modmenu" : ["pro.mikey.autoclicker.fabric.client.ModMenuAPIImpl"]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "fabric": "*",
+    "minecraft": ">=1.21",
+    "java": ">=21"
+  }
+}
