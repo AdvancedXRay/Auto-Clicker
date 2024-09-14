@@ -1,10 +1,10 @@
 plugins {
-    id 'dev.architectury.loom' version '1.6-SNAPSHOT' apply false
+    id 'dev.architectury.loom' version '1.7-SNAPSHOT' apply false
     id 'architectury-plugin' version '3.4-SNAPSHOT'
     id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
     id 'maven-publish'
     id 'pro.mikey.plugins.insaniam' version "0.1-SNAPSHOT"
-    id "me.modmuss50.mod-publish-plugin" version "0.5.1"
+    id "me.modmuss50.mod-publish-plugin" version "0.7.4"
 }
 
 architectury {
@@ -17,7 +17,6 @@ allprojects {
 }
 
 subprojects {
-    def ENV = System.getenv()
     version = project.mod_version
     group = project.maven_group
 
@@ -44,9 +43,6 @@ subprojects {
     }
 
     java {
-        // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-        // if it is present.
-        // If you remove this line, sources will not be generated.
         withSourcesJar()
 
         sourceCompatibility = JavaVersion.VERSION_21
@@ -74,62 +70,87 @@ subprojects {
                 from components.java
             }
         }
+
         repositories {
-            if (ENV.SAPS_TOKEN) {
+            def token = providers.environmentVariable("SAPS_TOKEN")
+            if (token.isPresent()) {
                 maven {
                     url "https://maven.saps.dev/releases"
                     credentials {
                         username = "mikeymods"
-                        password = "${ENV.SAPS_TOKEN}"
+                        password = token.get()
                     }
                 }
             }
         }
     }
-    def changelogData = insaniamUtils.createChangelog {
-        file = file('CHANGELOG.md')
-        versionPattern = ~/## \[[^]]+]/
-        fallbackValue = "No changelog provided"
-        version = project.mod_version
+}
+
+def changelogData = insaniamUtils.createChangelog {
+    file = file('CHANGELOG.md')
+    versionPattern = ~/## \[[^]]+]/
+    fallbackValue = "No changelog provided"
+    version = project.mod_version
+}
+
+publishMods {
+    def curseToken = providers.environmentVariable("CURSE_DEPLOY_TOKEN")
+
+    dryRun = !curseToken.isPresent()
+    changelog = changelogData
+    version = project.mod_version
+    type = STABLE
+
+    def createOptions = (String name) -> {
+        publishOptions {
+            file = project.provider { project(":$name").tasks.remapJar }.flatMap { it.archiveFile }
+            displayName = "[${name.toUpperCase()}][${minecraft_version}] Auto Clicker ${mod_version}"
+            modLoaders.add(name.toLowerCase())
+        }
     }
 
-    publishMods {
-        def curseToken = providers.environmentVariable("CURSE_DEPLOY_TOKEN")
+    def curseForgeOptions = curseforgeOptions {
+        projectId = project.curseforge_id
+        accessToken = providers.environmentVariable("CURSE_DEPLOY_TOKEN")
+        minecraftVersions.add("${minecraft_version}")
+        javaVersions.add(JavaVersion.VERSION_21)
+    }
 
-        dryRun = !curseToken.isPresent()
-        changelog = changelogData
-        version = project.mod_version
-        type = STABLE
-        file = remapJar.archiveFile
+    def modrinthOptions = modrinthOptions {
+        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+        projectId = project.modrinth_id
+        minecraftVersions.add("${minecraft_version}")
+    }
 
-        curseforge {
-            displayName = "Auto Clicker Fabric ${mod_version}"
-            modLoaders.add("fabric")
-            accessToken = curseToken
-            projectId = project.curseforge_id
-            minecraftVersions.add("${minecraft_version}")
-            javaVersions.add(JavaVersion.VERSION_21)
-            requires {
-                slug = "fabric-api"
-            }
-        }
+    def fabricOptions = createOptions("fabric")
+    def neoforgeOptions = createOptions("neoforge")
 
-        modrinth {
-            displayName = "Auto Clicker Fabric ${mod_version}"
-            modLoaders.add("fabric")
-            accessToken = providers.environmentVariable("MODRINTH_TOKEN")
-            projectId = project.modrinth_id
-            minecraftVersions.add("${minecraft_version}")
-            requires {
-                slug = "fabric-api"
-            }
-        }
+    curseforge("curseforgeFabric") {
+        from(curseForgeOptions, fabricOptions)
+        requires("fabric-api")
+    }
 
-        github {
-            repository = "AdvancedXRay/Auto-Clicker-Fabric"
-            accessToken = providers.environmentVariable("GITHUB_TOKEN")
-            commitish = providers.environmentVariable("GITHUB_SHA").orElse("main")
-            tagName = providers.environmentVariable("GITHUB_REF_NAME").orElse("v${mod_version}")
-        }
+    curseforge("curseforgeNeoforge") {
+        from(curseForgeOptions, neoforgeOptions)
+    }
+
+    modrinth("modrinthFabric") {
+        from(modrinthOptions, fabricOptions)
+        requires("fabric-api")
+    }
+
+    modrinth("modrinthNeoforge") {
+        from(modrinthOptions, neoforgeOptions)
+    }
+
+    github {
+        file = project.provider { project(":neoforge").tasks.remapJar }.flatMap { it.archiveFile }
+        additionalFiles.from project.provider { project(":fabric").tasks.remapJar }.flatMap { it.archiveFile }
+        additionalFiles.from project.provider { project(":common").tasks.remapJar }.flatMap { it.archiveFile }
+
+        repository = "AdvancedXRay/Auto-Clicker"
+        accessToken = providers.environmentVariable("GITHUB_TOKEN")
+        commitish = providers.environmentVariable("GITHUB_SHA").orElse("main")
+        tagName = providers.environmentVariable("GITHUB_REF_NAME").orElse("v${mod_version}")
     }
 }
