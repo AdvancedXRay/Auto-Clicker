@@ -1,3 +1,9 @@
+## [21.1.0]
+
+### Changed
+
+- Auto clicker is now available for Neoforge as well as Fabric! Thanks to [@AdyTech99](https://github.com/AdyTech99)
+
 ## [21.0.3]
 
 ### Changed
