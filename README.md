@@ -13,12 +13,6 @@ Quick and dirty Auto Clicker mod for Fabric(mc)
 ![GitHub last commit](https://img.shields.io/github/last-commit/AdvancedXRay/Auto-Clicker-Fabric)
 [![Build Status](https://ci.mikey.pro/buildStatus/icon?job=Auto-Clicker-Fabric%2Fmain)](https://ci.mikey.pro/job/Auto-Clicker-Fabric/job/main/)
 
-## Notice
-
-> I'm currently looking for a new developer to take on Auto Clicker for Fabric, if you're intrested, please reach out to me on discord at `MiKeY#2628`
-
-[![Discord invite link](.github/assets/discord-join-badge.svg)](https://discord.gg/yYNuqJxucJ)
-
 ## Features
 - Auto click (hold & spam) for Right and Left click
 - Support for AFK farms when respecting cool down
