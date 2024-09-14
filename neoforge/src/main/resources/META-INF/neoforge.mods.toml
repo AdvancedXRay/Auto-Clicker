@@ -1,29 +1,29 @@
 modLoader = "javafml"
 loaderVersion = "[4,)"
-#issueTrackerURL = ""
-license = "Insert License Here"
+issueTrackerURL = "https://github.com/advancedxray/auto-clicker/issues"
+license = "MIT"
 
 [[mods]]
 modId = "autoclicker"
 version = "${version}"
 displayName = "Auto Clicker"
-authors = "Me!"
+authors = "ErrorMikey"
 description = '''
-This is an example description! Tell everyone what your mod is about!
+Automatically left and right clicks for you, how kind!
 '''
-#logoFile = ""
+logoFile = "assets/autoclicker-fabric/icon.png"
 
 [[dependencies.autoclicker]]
 modId = "neoforge"
 type = "required"
-versionRange = "[21.0,)"
+versionRange = "[21.1,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.autoclicker]]
 modId = "minecraft"
 type = "required"
-versionRange = "[1.21,)"
+versionRange = "[1.21.1,)"
 ordering = "NONE"
 side = "BOTH"
 

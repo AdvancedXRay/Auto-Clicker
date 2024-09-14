@@ -10,11 +10,11 @@
   ],
   "contact": {
     "homepage": "https://mikey.pro/",
-    "sources": "https://github.com/michaelhillcox/auto-clicker-fabric",
-    "issues": "https://github.com/michaelhillcox/auto-clicker-fabric/issues"
+    "sources": "https://github.com/advancedxray/auto-clicker",
+    "issues": "https://github.com/advancedxray/auto-clicker/issues"
   },
   "license": "MIT",
-  "icon": "assets/autoclicker-fabric/icon.png",
+  "icon": "assets/autoclicker/icon.png",
   "environment": "client",
   "entrypoints": {
     "client": [
