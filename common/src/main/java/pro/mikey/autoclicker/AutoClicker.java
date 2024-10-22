@@ -236,7 +236,7 @@ public class AutoClicker {
         }
 
         HitResult rayTrace = mc.crosshairTarget;
-        if (rayTrace instanceof EntityHitResult && mc.interactionManager != null) {
+        if (rayTrace instanceof EntityHitResult && mc.interactionManager != null && mc.player != null) {
             if(!(config.getLeftClick().isRespectShield() && isShielding(mc.player))) {
                 mc.interactionManager.attackEntity(mc.player, ((EntityHitResult) rayTrace).getEntity());
                 if (mc.player != null) {
