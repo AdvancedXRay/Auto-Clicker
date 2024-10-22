@@ -305,6 +305,8 @@ public class AutoClicker {
                 if (mc.player != null) {
                     mc.player.swingHand(Hand.MAIN_HAND);
                 }
+                // it's impossible in vanilla minecraft to attack and use item at the same time
+                mc.interactionManager.stopUsingItem(mc.player);
             }
         }
     }
