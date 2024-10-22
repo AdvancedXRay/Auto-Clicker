@@ -10,8 +10,10 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ShieldItem;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import org.apache.logging.log4j.LogManager;
@@ -187,12 +189,15 @@ public class AutoClicker {
                         key.resetTimeout();
                     }
 
-                    // Press the button twice by toggling 1 and 0
-                    key.getKey().setPressed(key.getTimeout() == 1);
-
-                    if (key.getKey().isPressed()) {
-                        this.attemptMobAttack(mc, key);
+                    // simulate the actual button press only if its jumping
+                    if(key == jumpHolding) {
+                        // Press the button twice by toggling 1 and 0
+                        key.getKey().setPressed(key.getTimeout() == 1);
                     }
+                    // for left click, attempt to attack the mob
+                    this.attemptMobAttack(mc, key);
+                    // for right click, attempt to interact with block or mob
+                    this.attemptUse(mc, key);
                 }
                 key.decreaseTimeout();
             } else {
@@ -226,6 +231,64 @@ public class AutoClicker {
         } else {
             // Hold the click
             key.getKey().setPressed(true);
+        }
+    }
+
+    /**
+     * Attempts to use items in main hand, and if it couldn't, tries offhand.
+     */
+    private void attemptUse(MinecraftClient mc, Holding key) {
+        // don't interact on left click
+        if(key.getKey() != rightHolding.getKey() || mc.interactionManager == null || mc.player == null) {
+            return;
+        }
+
+        HitResult rayTrace = mc.crosshairTarget;
+        if(rayTrace == null) {
+            return;
+        }
+
+        // try with both hands
+        for(var hand : Hand.values()) {
+            if (rayTrace.getType() == HitResult.Type.ENTITY && rayTrace instanceof EntityHitResult) {
+                // interact with entity
+                ActionResult result = mc.interactionManager.interactEntity(mc.player, ((EntityHitResult) rayTrace).getEntity(), hand);
+                if (result.isAccepted()) {
+                    if (result.shouldSwingHand()) {
+                        mc.player.swingHand(hand);
+                    }
+                    return;
+                }
+            } else if (rayTrace.getType() == HitResult.Type.BLOCK) {
+                // interact with block
+                ActionResult result = mc.interactionManager.interactBlock(mc.player, hand, (BlockHitResult) rayTrace);
+                if (result.isAccepted()) {
+                    if (result.shouldSwingHand()) {
+                        mc.player.swingHand(hand);
+                    }
+                    return;
+                } else {
+                    // if you cant interact with block, you could use a water bucket on it
+                    ActionResult result1 = mc.interactionManager.interactItem(mc.player, hand);
+                    if(result1.isAccepted()) {
+                        if(result.shouldSwingHand()) {
+                            mc.player.swingHand(hand);
+                        }
+                        return;
+                    }
+                }
+            } else if (rayTrace.getType() == HitResult.Type.MISS) {
+                // no blocks and entities to interact with
+                // attempt to use an item (e.g. ender pearl)
+                ActionResult result = mc.interactionManager.interactItem(mc.player, hand);
+                if (result.isAccepted()) {
+                    if (result.shouldSwingHand()) {
+                        // cosmetic swing
+                        mc.player.swingHand(hand);
+                    }
+                    return;
+                }
+            }
         }
     }
 
