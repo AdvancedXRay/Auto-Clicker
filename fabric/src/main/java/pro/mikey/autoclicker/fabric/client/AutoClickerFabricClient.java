@@ -17,6 +17,6 @@ public final class AutoClickerFabricClient implements ClientModInitializer {
         KeyBindingHelper.registerKeyBinding(AutoClicker.openConfig);
 
         ClientLifecycleEvents.CLIENT_STARTED.register(autoClicker::clientReady);
-        HudRenderCallback.EVENT.register(autoClicker::RenderGameOverlayEvent);
+        HudRenderCallback.EVENT.register(autoClicker::renderGameOverlayEvent);
     }
 }

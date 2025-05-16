@@ -1,7 +1,7 @@
 package pro.mikey.autoclicker.neoforge;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -18,7 +18,6 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
 import pro.mikey.autoclicker.AutoClicker;
-import pro.mikey.autoclicker.OptionsScreen;
 
 @Mod(AutoClicker.MOD_ID)
 @EventBusSubscriber(value = Dist.CLIENT, modid = AutoClicker.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
@@ -32,7 +31,7 @@ public final class AutoClickerNeoForge {
 
     @SubscribeEvent
     public static void onClientStarted(FMLLoadCompleteEvent event){
-        autoClicker.clientReady(MinecraftClient.getInstance());
+        autoClicker.clientReady(Minecraft.getInstance());
     }
 
     @SubscribeEvent
@@ -42,11 +41,11 @@ public final class AutoClickerNeoForge {
     }
 
     public void onClientTick(ClientTickEvent.Post event){
-        autoClicker.clientTickEvent(MinecraftClient.getInstance());
+        autoClicker.clientTickEvent(Minecraft.getInstance());
     }
 
     public void onHudRender(RenderGuiEvent.Pre event){
-        autoClicker.RenderGameOverlayEvent(event.getGuiGraphics(), event.getPartialTick());
+        autoClicker.renderGameOverlayEvent(event.getGuiGraphics(), event.getPartialTick());
     }
 
     @SubscribeEvent

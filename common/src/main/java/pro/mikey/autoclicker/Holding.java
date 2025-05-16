@@ -1,13 +1,13 @@
 package pro.mikey.autoclicker;
 
-import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.KeyMapping;
 
 public class Holding {
-    private final KeyBinding key;
+    private final KeyMapping key;
     Config.SharedConfig config;
     private int timeout;
 
-    public Holding(KeyBinding key, Config.SharedConfig config) {
+    public Holding(KeyMapping key, Config.SharedConfig config) {
         this.config = config;
         this.key = key;
         this.timeout = config.getCpt();
@@ -37,7 +37,7 @@ public class Holding {
         ((Config.LeftMouseConfig) this.config).setRespectShield(respectShield);
     }
 
-    public KeyBinding getKey() {
+    public KeyMapping getKey() {
         return this.key;
     }
 
@@ -83,7 +83,7 @@ public class Holding {
 
     public static class AttackHolding extends Holding {
 
-        public AttackHolding(KeyBinding key, Config.LeftMouseConfig config) {
+        public AttackHolding(KeyMapping key, Config.LeftMouseConfig config) {
             super(key, config);
         }
 

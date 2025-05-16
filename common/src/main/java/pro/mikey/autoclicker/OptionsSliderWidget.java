@@ -1,15 +1,15 @@
 package pro.mikey.autoclicker;
 
-import net.minecraft.client.gui.widget.SliderWidget;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.components.AbstractSliderButton;
+import net.minecraft.network.chat.Component;
 
 import java.util.function.Consumer;
 
 @Deprecated
-public class OptionsSliderWidget extends SliderWidget {
+public class OptionsSliderWidget extends AbstractSliderButton {
     public Consumer<Integer> onUpdate;
 
-    public OptionsSliderWidget(int x, int y, int width, int height, Text text, double value, Consumer<Integer> onUpdate) {
+    public OptionsSliderWidget(int x, int y, int width, int height, Component text, double value, Consumer<Integer> onUpdate) {
         super(x, y, width, height, text, value);
         this.onUpdate = onUpdate;
         this.updateMessage();
