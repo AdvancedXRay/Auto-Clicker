@@ -1,6 +1,8 @@
 package pro.mikey.autoclicker;
 
+import com.google.common.base.Suppliers;
 import com.google.gson.Gson;
+import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.KeyMapping;
@@ -9,11 +11,13 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.LazyLoadedValue;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import org.apache.commons.lang3.concurrent.LazyInitializer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
@@ -24,6 +28,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.function.Supplier;
 
 public class AutoClicker {
     public static final String MOD_ID = "autoclicker";
@@ -32,8 +37,13 @@ public class AutoClicker {
             new KeyMapping("keybinding.open-gui", GLFW.GLFW_KEY_O, "category.autoclicker-fabric");
     public static final KeyMapping toggleHolding =
             new KeyMapping("keybinding.toggle-hold", GLFW.GLFW_KEY_I, "category.autoclicker-fabric");
-    private static final Path CONFIG_DIR = Paths.get(Minecraft.getInstance().gameDirectory.getPath() + "/config");
-    private static final Path CONFIG_FILE = Paths.get(CONFIG_DIR + "/auto-clicker-fabric.json");
+
+    private static final Supplier<Pair<Path, Path>> CONFIG_PATHS = Suppliers.memoize(() -> {
+        Path configDir = Paths.get(Minecraft.getInstance().gameDirectory.getPath() + "/config");
+        Path configFile = Paths.get(configDir + "/auto-clicker-fabric.json");
+        return Pair.of(configDir, configFile);
+    });
+
     public static Holding.AttackHolding leftHolding;
     public static Holding rightHolding;
     public static Holding jumpHolding;
@@ -60,10 +70,11 @@ public class AutoClicker {
     }
 
     public void clientReady(Minecraft client) {
-        if (!Files.exists(CONFIG_FILE)) {
+        var configPaths = CONFIG_PATHS.get();
+        if (!Files.exists(configPaths.value())) {
             try {
-                Files.createDirectories(CONFIG_DIR);
-                Files.createFile(CONFIG_FILE);
+                Files.createDirectories(configPaths.key());
+                Files.createFile(configPaths.value());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -71,7 +82,7 @@ public class AutoClicker {
             this.saveConfig();
         } else {
             try {
-                FileReader json = new FileReader(CONFIG_FILE.toFile());
+                FileReader json = new FileReader(configPaths.value().toFile());
                 Config config = new Gson().fromJson(json, Config.class);
                 json.close();
                 if (config != null && config.getHudConfig() != null) {
@@ -90,8 +101,9 @@ public class AutoClicker {
     }
 
     public void saveConfig() {
+        var configPaths = CONFIG_PATHS.get();
         try {
-            FileWriter writer = new FileWriter(CONFIG_FILE.toFile());
+            FileWriter writer = new FileWriter(configPaths.value().toFile());
 
             new Gson().toJson(this.config, writer);
             writer.flush();
