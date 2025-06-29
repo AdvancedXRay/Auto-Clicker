@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import pro.mikey.autoclicker.AutoClicker;
 
 @Mod(AutoClicker.MOD_ID)
-@EventBusSubscriber(value = Dist.CLIENT, modid = AutoClicker.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(value = Dist.CLIENT, modid = AutoClicker.MOD_ID)
 public final class AutoClickerNeoForge {
     private static final AutoClicker autoClicker = new AutoClicker();
     public AutoClickerNeoForge() {

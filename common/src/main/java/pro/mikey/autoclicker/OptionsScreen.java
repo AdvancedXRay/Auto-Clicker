@@ -5,6 +5,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
@@ -237,22 +238,21 @@ public class OptionsScreen extends Screen {
 
     private void renderHelpingTip(GuiGraphics context, Component text, int mouseX, int mouseY) {
         context.renderTooltip(
-            this.font, this.font.split(FormattedText.of(text.getString()), 250), DefaultTooltipPositioner.INSTANCE, mouseX, mouseY);
+            this.font, this.font.split(FormattedText.of(text.getString()), 250).stream().map(ClientTooltipComponent::create).toList(), mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, null);
     }
 
     @Override
     public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
-        this.renderBackground(context, mouseX, mouseY, delta);
         super.render(context, mouseX, mouseY, delta);
 
         context.drawString(
-            this.font,Language.GUI_ATTACK.getText().getVisualOrderText(), this.width / 2 - 200, this.height / 2 - 116, 0xFFFFFF);
+            this.font,Language.GUI_ATTACK.getText().getVisualOrderText(), this.width / 2 - 200, this.height / 2 - 116, 0xFFFFFFFF);
 
         context.drawString(
-            this.font, Language.GUI_USE.getText().getVisualOrderText(), this.width / 2 - 65, this.height / 2 - 116, 0xFFFFFF);
+            this.font, Language.GUI_USE.getText().getVisualOrderText(), this.width / 2 - 65, this.height / 2 - 116, 0xFFFFFFFF);
 
         context.drawString(
-            this.font, Language.GUI_JUMP.getText().getVisualOrderText(), this.width / 2 + 70, this.height / 2 - 116, 0xFFFFFF);
+            this.font, Language.GUI_JUMP.getText().getVisualOrderText(), this.width / 2 + 70, this.height / 2 - 116, 0xFFFFFFFF);
 
         for (Button button : buttonTooltips.keySet()) {
         	if (button.isHovered()) {

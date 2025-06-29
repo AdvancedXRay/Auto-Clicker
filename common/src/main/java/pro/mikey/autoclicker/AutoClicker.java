@@ -125,21 +125,21 @@ public class AutoClicker {
             Component text = Language.HUD_HOLDING.getText(I18n.get(leftHolding.getKey().getName()));
             int y = getHudY() + (15 * 0);
             int x = getHudX(text);
-            context.drawString(client.font, text.getVisualOrderText(), x, y, 0xffffff);
+            context.drawString(client.font, text.getVisualOrderText(), x, y, 0xFFffffff);
         }
 
         if (rightHolding.isActive()) {
             Component text = Language.HUD_HOLDING.getText(I18n.get(rightHolding.getKey().getName()));
             int y = getHudY() + (15 * 1);
             int x = getHudX(text);
-            context.drawString(client.font, text.getVisualOrderText(), x, y, 0xffffff);
+            context.drawString(client.font, text.getVisualOrderText(), x, y, 0xFFffffff);
         }
 
         if (jumpHolding.isActive()) {
             Component text = Language.HUD_HOLDING.getText(I18n.get(jumpHolding.getKey().getName()));
             int y = getHudY() + (15 * 2);
             int x = getHudX(text);
-            context.drawString(client.font, text.getVisualOrderText(), x, y, 0xffffff);
+            context.drawString(client.font, text.getVisualOrderText(), x, y, 0xFFffffff);
         }
     }
 
