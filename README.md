@@ -5,13 +5,7 @@ Quick and dirty Auto Clicker mod for Fabric(mc)
 [![Downloads](http://cf.way2muchnoise.eu/full_445095_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/auto-clicker-fabric)
 [![Versions Supported](http://cf.way2muchnoise.eu/versions/445095.svg)](https://www.curseforge.com/minecraft/mc-mods/auto-clicker-fabric)
 [![GitHub license](https://img.shields.io/github/license/AdvancedXRay/Auto-Clicker-Fabric)](https://github.com/AdvancedXRay/Auto-Clicker-Fabric/blob/main/LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/AdvancedXRay/Auto-Clicker-Fabric)](https://github.com/AdvancedXRay/Auto-Clicker-Fabric/stargazers)
 [![GitHub issues](https://img.shields.io/github/issues/AdvancedXRay/Auto-Clicker-Fabric)](https://github.com/AdvancedXRay/Auto-Clicker-Fabric/issues)
-![GitHub all releases](https://img.shields.io/github/downloads/AdvancedXRay/Auto-Clicker-Fabric/total)
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/AdvancedXRay/Auto-Clicker-Fabric)
-![GitHub Release Date](https://img.shields.io/github/release-date/AdvancedXRay/Auto-Clicker-Fabric)
-![GitHub last commit](https://img.shields.io/github/last-commit/AdvancedXRay/Auto-Clicker-Fabric)
-[![Build Status](https://ci.mikey.pro/buildStatus/icon?job=Auto-Clicker-Fabric%2Fmain)](https://ci.mikey.pro/job/Auto-Clicker-Fabric/job/main/)
 
 ## Features
 - Auto click (hold & spam) for Right and Left click
