@@ -113,7 +113,7 @@ def changelogData = insaniamUtils.createChangelog {
 }
 
 publishMods {
-    def curseToken = providers.environmentVariable("CURSE_DEPLOY_TOKEN")
+    def curseToken = providers.environmentVariable("CURSE_TOKEN")
 
     dryRun = !curseToken.isPresent()
     changelog = changelogData
@@ -130,7 +130,7 @@ publishMods {
 
     def curseForgeOptions = curseforgeOptions {
         projectId = project.curseforge_id
-        accessToken = providers.environmentVariable("CURSE_DEPLOY_TOKEN")
+        accessToken = curseToken.get()
         minecraftVersions.add("${minecraft_version}")
         javaVersions.add(JavaVersion.VERSION_25)
     }
