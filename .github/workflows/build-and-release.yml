@@ -4,17 +4,26 @@ on:
   push:
     tags:
       - "v*"
-
+      -
 jobs:
   build:
-    if: |
-      !contains(github.event.head_commit.message, '[ciskip]')
-    uses: nanite/workflows/.github/workflows/release.yml@v1.3
-    with:
-      java-version: 25
-      gradle-tasks: build publish publishMods --no-daemon
-    secrets:
-      saps-token: ${{ secrets.SAPS_TOKEN }}
-      curse-token: ${{ secrets.CURSE_DEPLOY_TOKEN }}
-      modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-      github-token: ${{ secrets.GITHUB_TOKEN }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone project
+        uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: "microsoft"
+          java-version: 25
+      - name: Fix borked permissions
+        run: chmod +x ./gradlew
+      - name: Setup gradle
+        uses: gradle/actions/setup-gradle@v4
+      - name: Run gradle tasks
+        env:
+          SAPS_TOKEN: ${{ secrets.SAPS_TOKEN }}
+          CURSE_TOKEN: ${{ secrets.CURSE_DEPLOY_TOKEN }}
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew build publish publishMods --no-daemon
