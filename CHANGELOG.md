@@ -1,3 +1,8 @@
+## [26.1.2.2]
+
+### Fixed
+* Version range on Fabric being too restrictive
+
 ## [26.1.2.1]
 
 ### Changed
