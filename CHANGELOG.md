@@ -1,3 +1,9 @@
+## [26.1.2.1]
+
+### Changed
+
+- Updated to 26.1
+
 ## [21.11.0]
 
 ### Changed

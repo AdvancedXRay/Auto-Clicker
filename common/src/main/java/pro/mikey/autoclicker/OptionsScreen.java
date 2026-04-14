@@ -1,7 +1,7 @@
 package pro.mikey.autoclicker;
 
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
@@ -237,22 +237,22 @@ public class OptionsScreen extends Screen {
         return "top-left";
     }
 
-    private void renderHelpingTip(GuiGraphics context, Component text, int mouseX, int mouseY) {
-        context.renderTooltip(
+    private void renderHelpingTip(GuiGraphicsExtractor context, Component text, int mouseX, int mouseY) {
+        context.tooltip(
             this.font, this.font.split(FormattedText.of(text.getString()), 250).stream().map(ClientTooltipComponent::create).toList(), mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, null);
     }
 
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
-        super.render(context, mouseX, mouseY, delta);
+    public void extractRenderState(GuiGraphicsExtractor context, int mouseX, int mouseY, float delta) {
+        super.extractRenderState(context, mouseX, mouseY, delta);
 
-        context.drawString(
+        context.text(
             this.font,Language.GUI_ATTACK.getText().getVisualOrderText(), this.width / 2 - 200, this.height / 2 - 116, 0xFFFFFFFF);
 
-        context.drawString(
+        context.text(
             this.font, Language.GUI_USE.getText().getVisualOrderText(), this.width / 2 - 65, this.height / 2 - 116, 0xFFFFFFFF);
 
-        context.drawString(
+        context.text(
             this.font, Language.GUI_JUMP.getText().getVisualOrderText(), this.width / 2 + 70, this.height / 2 - 116, 0xFFFFFFFF);
 
         for (Button button : buttonTooltips.keySet()) {

@@ -7,7 +7,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -115,7 +115,7 @@ public class AutoClicker {
         }
     }
 
-    public void renderGameOverlayEvent(GuiGraphics context, DeltaTracker delta) {
+    public void renderGameOverlayEvent(GuiGraphicsExtractor context, DeltaTracker delta) {
 
         if ((!leftHolding.isActive() && !rightHolding.isActive() && !jumpHolding.isActive()) || !this.isActive || !config.getHudConfig().isEnabled()) {
             return;
@@ -127,21 +127,21 @@ public class AutoClicker {
             Component text = Language.HUD_HOLDING.getText(I18n.get(leftHolding.getKey().getName()));
             int y = getHudY() + (15 * 0);
             int x = getHudX(text);
-            context.drawString(client.font, text.getVisualOrderText(), x, y, 0xFFffffff);
+            context.text(client.font, text.getVisualOrderText(), x, y, 0xFFffffff);
         }
 
         if (rightHolding.isActive()) {
             Component text = Language.HUD_HOLDING.getText(I18n.get(rightHolding.getKey().getName()));
             int y = getHudY() + (15 * 1);
             int x = getHudX(text);
-            context.drawString(client.font, text.getVisualOrderText(), x, y, 0xFFffffff);
+            context.text(client.font, text.getVisualOrderText(), x, y, 0xFFffffff);
         }
 
         if (jumpHolding.isActive()) {
             Component text = Language.HUD_HOLDING.getText(I18n.get(jumpHolding.getKey().getName()));
             int y = getHudY() + (15 * 2);
             int x = getHudX(text);
-            context.drawString(client.font, text.getVisualOrderText(), x, y, 0xFFffffff);
+            context.text(client.font, text.getVisualOrderText(), x, y, 0xFFffffff);
         }
     }
 
@@ -276,11 +276,10 @@ public class AutoClicker {
         assert mc.player != null;
         while (toggleHolding.consumeClick()) {
             this.isActive = !this.isActive;
-            mc.player.displayClientMessage(
+            mc.player.sendOverlayMessage(
                     (this.isActive ? Language.MSG_HOLDING_KEYS : Language.MSG_RELEASED_KEYS)
                     .getText()
-                            .withStyle(this.isActive ? ChatFormatting.GREEN : ChatFormatting.RED),
-                    true
+                            .withStyle(this.isActive ? ChatFormatting.GREEN : ChatFormatting.RED)
                     );
 
             if (!this.isActive) {

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "autoclicker",
+  "id": "${mod_id}",
   "version": "${version}",
   "name": "Auto Clicker",
   "description": "Automatically left and right clicks for you, how kind!",
@@ -24,8 +24,8 @@
   },
   "depends": {
     "fabricloader": ">=0.17.2",
-    "fabric": "*",
-    "minecraft": ">=1.21.11",
-    "java": ">=21"
+    "fabric-api": "${fabric_api_version_range}",
+    "minecraft": "${minecraft_version_range_sem}",
+    "java": ">=25"
   }
 }

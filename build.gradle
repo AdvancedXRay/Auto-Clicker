@@ -1,54 +1,57 @@
 plugins {
-    id 'dev.architectury.loom' version '1.13-SNAPSHOT' apply false
-    id 'architectury-plugin' version '3.4-SNAPSHOT'
-    id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
-    id 'maven-publish'
+    id 'java-library'
+    id 'fabric-loom' version '1.15-SNAPSHOT' apply(false)
+    id 'net.neoforged.moddev' version '2.0.141' apply(false)
+    id "me.modmuss50.mod-publish-plugin" version "1.1.0"
     id 'pro.mikey.plugins.insaniam' version "0.1-SNAPSHOT"
-    id "me.modmuss50.mod-publish-plugin" version "0.7.4"
-}
-
-architectury {
-    minecraft = project.minecraft_version
 }
 
 allprojects {
-    group = rootProject.maven_group
-    version = rootProject.mod_version
-}
-
-subprojects {
-    version = project.mod_version
-    group = project.maven_group
-
-    apply plugin: 'dev.architectury.loom'
-    apply plugin: 'architectury-plugin'
+    apply plugin: 'idea'
+    apply plugin: 'java-library'
     apply plugin: 'maven-publish'
 
-    base {
-        // Set up a suffixed format for the mod jar names, e.g. `example-fabric`.
-        archivesName = "$rootProject.archives_name-$project.name"
+    version = mod_version
+    group = maven_group
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+        options.release = 25
     }
 
     repositories {
-        maven { url "https://maven.terraformersmc.com/releases/"}
-        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+        mavenCentral()
     }
 
     dependencies {
-        minecraft "net.minecraft:minecraft:$rootProject.minecraft_version"
-        mappings loom.officialMojangMappings()
+//        testImplementation platform('org.junit:junit-bom:5.10.3')
+    }
+
+    idea {
+        module {
+            downloadSources = true
+            downloadJavadoc = true
+        }
+    }
+}
+
+subprojects {
+    base {
+        archivesName = "${archives_base_name}-$project.name"
+    }
+
+    if (project.name != "common") {
+        dependencies {
+            api project(":common")
+        }
+
+        jar {
+            from project(":common").sourceSets.main.output
+        }
     }
 
     java {
         withSourcesJar()
-
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
-    }
-
-    tasks.withType(JavaCompile).configureEach {
-        it.options.release = 21
-        it.options.encoding = "UTF-8"
     }
 
     jar {
@@ -57,13 +60,32 @@ subprojects {
         }
     }
 
+    def replaceProperties = [
+            mod_id: mod_id,
+            minecraft_version: minecraft_version,
+            minecraft_version_range_sem: minecraft_version_range_sem,
+            minecraft_version_range_mvn: minecraft_version_range_mvn,
+            neoforge_version: neoforge_version,
+            neoforge_version_range: neoforge_version_range,
+            fabric_loader_version: fabric_loader_version,
+            fabric_api_version: fabric_api_version,
+            fabric_api_version_range: fabric_api_version_range,
+            version: version,
+    ]
+
+    processResources {
+        inputs.properties replaceProperties
+
+        filesMatching(["META-INF/neoforge.mods.toml", "fabric.mod.json", "pack.mcmeta"]) {
+            expand replaceProperties
+        }
+    }
+
     // Configure Maven publishing.
     publishing {
         publications {
-            mavenJava(MavenPublication) {
-                groupId project.group
-                artifactId project.archivesBaseName
-                version project.version
+            register("maven${project.name.capitalize()}", MavenPublication) {
+                artifactId = "${rootProject.archives_base_name}-${project.name}"
                 from components.java
             }
         }
@@ -100,8 +122,8 @@ publishMods {
 
     def createOptions = (String name) -> {
         publishOptions {
-            file = project.provider { project(":$name").tasks.remapJar }.flatMap { it.archiveFile }
-            displayName = "[${name.toUpperCase()}][${minecraft_version}] Auto Clicker ${mod_version}"
+            file = project.provider { project(":$name").tasks.jar }.flatMap { it.archiveFile }
+            displayName = "Auto Clicker ${name.capitalize()} ${mod_version}"
             modLoaders.add(name.toLowerCase())
         }
     }
@@ -110,7 +132,7 @@ publishMods {
         projectId = project.curseforge_id
         accessToken = providers.environmentVariable("CURSE_DEPLOY_TOKEN")
         minecraftVersions.add("${minecraft_version}")
-        javaVersions.add(JavaVersion.VERSION_21)
+        javaVersions.add(JavaVersion.VERSION_25)
     }
 
     def modrinthOptions = modrinthOptions {
@@ -141,9 +163,9 @@ publishMods {
     }
 
     github {
-        file = project.provider { project(":neoforge").tasks.remapJar }.flatMap { it.archiveFile }
-        additionalFiles.from project.provider { project(":fabric").tasks.remapJar }.flatMap { it.archiveFile }
-        additionalFiles.from project.provider { project(":common").tasks.remapJar }.flatMap { it.archiveFile }
+        file = project.provider { project(":neoforge").tasks.jar }.flatMap { it.archiveFile }
+        additionalFiles.from project.provider { project(":fabric").tasks.jar }.flatMap { it.archiveFile }
+        additionalFiles.from project.provider { project(":common").tasks.jar }.flatMap { it.archiveFile }
 
         repository = "AdvancedXRay/Auto-Clicker"
         accessToken = providers.environmentVariable("GITHUB_TOKEN")

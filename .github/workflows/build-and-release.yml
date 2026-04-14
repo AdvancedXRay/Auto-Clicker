@@ -1,32 +1,20 @@
-name: CI Build & Release
+name: Release
 
 on:
   push:
-    tags: [ "v*" ]
+    tags:
+      - "v*"
 
 jobs:
   build:
-    runs-on: ubuntu-latest
     if: |
       !contains(github.event.head_commit.message, '[ciskip]')
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 21 & Cache
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'microsoft'
-          java-version: '21'
-          cache: 'gradle'
-      - name: Release
-        if: |
-          !contains(github.event.head_commit.message, '[norelease]')
-        env:
-          GIT_COMMIT: ${{ github.event.after }}
-          GIT_PREVIOUS_COMMIT: ${{ github.event.before }}
-          CURSE_DEPLOY_TOKEN: ${{ secrets.CURSE_DEPLOY_TOKEN }}
-          SAPS_TOKEN: ${{ secrets.SAPS_TOKEN }}
-          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          chmod +x ./gradlew
-          ./gradlew clean build publish publishMods --stacktrace --no-daemon
+    uses: nanite/workflows/.github/workflows/release.yml@v1.3
+    with:
+      java-version: 25
+      gradle-tasks: build publish publishMods --no-daemon
+    secrets:
+      saps-token: ${{ secrets.SAPS_TOKEN }}
+      curse-token: ${{ secrets.CURSE_DEPLOY_TOKEN }}
+      modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+      github-token: ${{ secrets.GITHUB_TOKEN }}

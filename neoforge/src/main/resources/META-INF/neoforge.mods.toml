@@ -4,7 +4,7 @@ issueTrackerURL = "https://github.com/advancedxray/auto-clicker/issues"
 license = "MIT"
 
 [[mods]]
-modId = "autoclicker"
+modId = "${mod_id}"
 version = "${version}"
 displayName = "Auto Clicker"
 authors = "ErrorMikey"
@@ -13,19 +13,16 @@ Automatically left and right clicks for you, how kind!
 '''
 logoFile = "assets/autoclicker-fabric/icon.png"
 
-[[dependencies.autoclicker]]
+[[dependencies.${mod_id}]]
 modId = "neoforge"
 type = "required"
-versionRange = "[21.1,)"
+versionRange = "${neoforge_version_range}"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.autoclicker]]
+[[dependencies.${mod_id}]]
 modId = "minecraft"
 type = "required"
-versionRange = "[1.21.11,)"
+versionRange = "${minecraft_version_range_mvn}"
 ordering = "NONE"
 side = "BOTH"
-
-[[mixins]]
-config = "autoclicker.mixins.json"
