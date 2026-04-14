@@ -130,7 +130,7 @@ publishMods {
 
     def curseForgeOptions = curseforgeOptions {
         projectId = project.curseforge_id
-        accessToken = curseToken.get()
+        accessToken = curseToken.orElse("dry-run-token")
         minecraftVersions.add("${minecraft_version}")
         javaVersions.add(JavaVersion.VERSION_25)
     }
