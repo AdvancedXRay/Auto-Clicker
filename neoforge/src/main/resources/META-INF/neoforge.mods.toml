@@ -11,7 +11,7 @@ authors = "ErrorMikey"
 description = '''
 Automatically left and right clicks for you, how kind!
 '''
-logoFile = "assets/autoclicker-fabric/icon.png"
+iconFile = "assets/autoclicker-fabric/icon.png"
 
 [[dependencies.${mod_id}]]
 modId = "neoforge"

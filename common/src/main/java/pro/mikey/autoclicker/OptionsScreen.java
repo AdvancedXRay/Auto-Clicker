@@ -10,6 +10,7 @@ import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPosition
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.Style;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -239,7 +240,7 @@ public class OptionsScreen extends Screen {
 
     private void renderHelpingTip(GuiGraphicsExtractor context, Component text, int mouseX, int mouseY) {
         context.tooltip(
-            this.font, this.font.split(FormattedText.of(text.getString()), 250).stream().map(ClientTooltipComponent::create).toList(), mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, null);
+            this.font, this.font.split(FormattedText.of(text.getString()), 250).stream().map(ClientTooltipComponent::create).toList(), mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, null, false);
     }
 
     @Override
