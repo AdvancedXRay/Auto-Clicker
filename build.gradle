@@ -120,13 +120,13 @@ publishMods {
 
     dryRun = !curseToken.isPresent()
     changelog = tasks.named("createChangelog").flatMap { it.outputFile }.map { it.asFile.text }
-    version = project.mod_version
+    version = project.version
     type = STABLE
 
     def createOptions = (String name) -> {
         publishOptions {
             file = project.provider { project(":$name").tasks.jar }.flatMap { it.archiveFile }
-            displayName = "Auto Clicker ${name.capitalize()} ${mod_version}"
+            displayName = "Auto Clicker ${name.capitalize()} ${project.version}"
             modLoaders.add(name.toLowerCase())
         }
     }
