@@ -11,6 +11,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ServerboundPunchPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
@@ -256,6 +257,7 @@ public class AutoClicker {
                 mc.gameMode.attack(mc.player, ((EntityHitResult) rayTrace).getEntity());
                 if (mc.player != null) {
                     mc.player.swing(InteractionHand.MAIN_HAND, SwingAnimation.DEFAULT, true);
+                    mc.player.connection.send(ServerboundPunchPacket.INSTANCE);
                 }
             }
         }
